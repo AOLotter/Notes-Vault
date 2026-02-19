@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+
+\title{Study Notes: Matrices and Systems of Equations}
+\author{}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{Systems of Linear Equations}
+	A \textbf{system of linear equations} is a set of equations involving the same set of variables. For example:
+	\[
+	\begin{cases}
+		2x + 3y = 5 \\
+		4x - y = 11
+	\end{cases}
+	\]
+	
+	This can be written in matrix form as:
+	\[
+	A\mathbf{x} = \mathbf{b}
+	\quad \text{where} \quad
+	A = \begin{bmatrix}
+		2 & 3 \\
+		4 & -1
+	\end{bmatrix}, \quad
+	\mathbf{x} = \begin{bmatrix}
+		x \\
+		y
+	\end{bmatrix}, \quad
+	\mathbf{b} = \begin{bmatrix}
+		5 \\
+		11
+	\end{bmatrix}
+	\]
+	
+	\section{Row Echelon Form (REF)}
+	A matrix is in \textbf{row echelon form} if:
+	\begin{itemize}
+		\item All nonzero rows are above any all-zero rows.
+		\item The leading entry of each nonzero row is to the right of the one in the row above it.
+		\item Entries below a leading entry are all zero.
+	\end{itemize}
+	
+	The \textbf{reduced row echelon form (RREF)} also requires:
+	\begin{itemize}
+		\item Leading entries are 1.
+		\item Each leading 1 is the only nonzero entry in its column.
+	\end{itemize}
+	
+	\section{Matrix Arithmetic}
+	Matrix operations include:
+	\begin{itemize}
+		\item \textbf{Addition/Subtraction:} Only if dimensions match.
+		\item \textbf{Scalar multiplication:} Multiply each element by a constant.
+		\item \textbf{Matrix multiplication:} If \( A \) is \( m \times n \), \( B \) must be \( n \times p \). The result is \( m \times p \).
+	\end{itemize}
+	
+	Example:
+	\[
+	A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \quad
+	B = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \quad
+	AB = \begin{bmatrix} 2 & 1 \\ 4 & 3 \end{bmatrix}
+	\]
+	
+	\section{Matrix Algebra}
+	Important properties:
+	\begin{itemize}
+		\item \( A + B = B + A \)
+		\item \( (A + B) + C = A + (B + C) \)
+		\item \( A(BC) = (AB)C \)
+		\item \( A(B + C) = AB + AC \)
+		\item Identity matrix \( I \): \( AI = IA = A \)
+		\item Inverse matrix \( A^{-1} \): \( AA^{-1} = A^{-1}A = I \)
+	\end{itemize}
+	
+	\section{Elementary Matrices}
+	An \textbf{elementary matrix} results from applying one row operation to the identity matrix.
+	
+	Types of elementary row operations:
+	\begin{itemize}
+		\item Swap two rows.
+		\item Multiply a row by a nonzero scalar.
+		\item Add a multiple of one row to another.
+	\end{itemize}
+	
+	Multiplying a matrix \( A \) on the left by an elementary matrix \( E \) applies the corresponding row operation to \( A \).
+	
+	\section{Partitioned Matrices}
+	A \textbf{partitioned matrix} is divided into smaller submatrices (blocks).
+	
+	Example:
+	\[
+	A = \begin{bmatrix}
+		A_{11} & A_{12} \\
+		A_{21} & A_{22}
+	\end{bmatrix}
+	\]
+	
+	Block matrices are useful in simplifying large matrix operations and in applications like parallel computing and system design.
+	
+\end{document}
