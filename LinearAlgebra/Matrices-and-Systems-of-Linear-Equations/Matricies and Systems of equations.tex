@@ -1,3 +1,4 @@
+
 \documentclass[12pt]{article}
 \usepackage{amsmath, amssymb}
 
@@ -49,6 +50,135 @@
 		\item Each leading 1 is the only nonzero entry in its column.
 	\end{itemize}
 	
+	\section*{Example: Row operations to reach RREF}
+	
+	Consider the matrix
+	\[
+	A =
+	\begin{bmatrix}
+		1 & 2 & -1 \\
+		2 & 3 & 1 \\
+		-1 & 0 & 2
+	\end{bmatrix}.
+	\]
+	
+	We will use elementary row operations to reduce $A$ to reduced row echelon form (RREF).
+	
+	\subsubsection*{Step 1: Use the leading 1 in row 1 to clear entries below it}
+	
+	We want zeros below the leading 1 in the first column.
+	
+	Replace row 2 by row 2 minus $2$ times row 1:
+	\[
+	R_2 \leftarrow R_2 - 2R_1.
+	\]
+	
+	Replace row 3 by row 3 plus row 1:
+	\[
+	R_3 \leftarrow R_3 + R_1.
+	\]
+	
+	This gives
+	\[
+	\begin{bmatrix}
+		1 & 2 & -1 \\
+		0 & -1 & 3 \\
+		0 & 2 & 1
+	\end{bmatrix}.
+	\]
+	
+	\subsubsection*{Step 2: Make the pivot in row 2 equal to 1}
+	
+	Currently row 2 has a leading entry of $-1$ in the second column. Multiply row 2 by $-1$:
+	\[
+	R_2 \leftarrow -1 \cdot R_2.
+	\]
+	
+	Now we have
+	\[
+	\begin{bmatrix}
+		1 & 2 & -1 \\
+		0 & 1 & -3 \\
+		0 & 2 & 1
+	\end{bmatrix}.
+	\]
+	
+	\subsubsection*{Step 3: Use the pivot in row 2 to clear the entry below it}
+	
+	We want a zero below the pivot (the $1$ in row 2, column 2). Replace row 3 by row 3 minus $2$ times row 2:
+	\[
+	R_3 \leftarrow R_3 - 2R_2.
+	\]
+	
+	This gives
+	\[
+	\begin{bmatrix}
+		1 & 2 & -1 \\
+		0 & 1 & -3 \\
+		0 & 0 & 7
+	\end{bmatrix}.
+	\]
+	
+	\subsubsection*{Step 4: Make the pivot in row 3 equal to 1}
+	
+	Row 3 has a leading entry of $7$ in the third column. Multiply row 3 by $\frac{1}{7}$:
+	\[
+	R_3 \leftarrow \tfrac{1}{7} R_3.
+	\]
+	
+	Now the matrix is
+	\[
+	\begin{bmatrix}
+		1 & 2 & -1 \\
+		0 & 1 & -3 \\
+		0 & 0 & 1
+	\end{bmatrix}.
+	\]
+	
+	At this point the matrix is in row echelon form. Next we clear the entries above each pivot to reach reduced row echelon form.
+	
+	\subsubsection*{Step 5: Clear entries above the pivot in column 3}
+	
+	Use the pivot in row 3, column 3 (the $1$) to make the entries above it zero.
+	
+	Row 1 operation:
+	\[
+	R_1 \leftarrow R_1 + R_3
+	\quad \text{(because row 1 has } -1 \text{ in column 3)}.
+	\]
+	
+	Row 2 operation:
+	\[
+	R_2 \leftarrow R_2 + 3R_3
+	\quad \text{(because row 2 has } -3 \text{ in column 3)}.
+	\]
+	
+	The matrix becomes
+	\[
+	\begin{bmatrix}
+		1 & 2 & 0 \\
+		0 & 1 & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}.
+	\]
+	
+	\subsubsection*{Step 6: Clear entries above the pivot in column 2}
+	
+	Use the pivot in row 2, column 2 to make the entry above it zero. Replace row 1 by row 1 minus $2$ times row 2:
+	\[
+	R_1 \leftarrow R_1 - 2R_2.
+	\]
+	
+	The final matrix is
+	\[
+	\begin{bmatrix}
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		0 & 0 & 1
+	\end{bmatrix},
+	\]
+	which is the reduced row echelon form (RREF) of $A$.
+	
 	\section{Matrix Arithmetic}
 	Matrix operations include:
 	\begin{itemize}
@@ -75,6 +205,8 @@
 		\item Inverse matrix \( A^{-1} \): \( AA^{-1} = A^{-1}A = I \)
 	\end{itemize}
 	
+	\newpage
+	
 	\section{Elementary Matrices}
 	An \textbf{elementary matrix} results from applying one row operation to the identity matrix.
 	
@@ -99,5 +231,170 @@
 	\]
 	
 	Block matrices are useful in simplifying large matrix operations and in applications like parallel computing and system design.
+	
+	\newpage
+	
+	\section*{Matrix Multiplication}
+	
+	Matrix multiplication is a way of combining two matrices to produce a third matrix. 
+	It is defined when the number of \emph{columns} of the first matrix equals the number of \emph{rows} of the second matrix.
+	
+	\subsection*{Definition}
+	
+	Let
+	\[
+	A =
+	\begin{bmatrix}
+		a_{11} & a_{12} & \cdots & a_{1n} \\
+		a_{21} & a_{22} & \cdots & a_{2n} \\
+		\vdots & \vdots & \ddots & \vdots \\
+		a_{m1} & a_{m2} & \cdots & a_{mn}
+	\end{bmatrix}
+	\quad \text{and} \quad
+	B =
+	\begin{bmatrix}
+		b_{11} & b_{12} & \cdots & b_{1p} \\
+		b_{21} & b_{22} & \cdots & b_{2p} \\
+		\vdots & \vdots & \ddots & \vdots \\
+		b_{n1} & b_{n2} & \cdots & b_{np}
+	\end{bmatrix},
+	\]
+	where $A$ is an $m\times n$ matrix and $B$ is an $n\times p$ matrix.
+	
+	Then the product $C = AB$ is an $m\times p$ matrix whose $(i,j)$-entry is
+	\[
+	c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj}.
+	\]
+	
+	In words: the entry $c_{ij}$ in row $i$, column $j$ of the product is obtained by taking the dot product of row $i$ of $A$ with column $j$ of $B$.
+	
+	\subsection*{Important facts}
+	
+	\begin{itemize}
+		\item The product $AB$ is defined only if the number of columns of $A$ equals the number of rows of $B$.
+		\item The size of $AB$ is $m\times p$ (rows of $A$ by columns of $B$).
+		\item Matrix multiplication is \emph{not} commutative in general: usually $AB \neq BA$.
+		\item Matrix multiplication is associative: $(AB)C = A(BC)$ whenever the products are defined.
+		\item Matrix multiplication is distributive over addition: $A(B + C) = AB + AC$ and $(A + B)C = AC + BC$.
+	\end{itemize}
+	
+	\subsection*{Worked example: Multiplying two $2\times 2$ matrices}
+	
+	Let
+	\[
+	A =
+	\begin{bmatrix}
+		1 & 2 \\
+		3 & 4
+	\end{bmatrix},
+	\quad
+	B =
+	\begin{bmatrix}
+		2 & 0 \\
+		-1 & 5
+	\end{bmatrix}.
+	\]
+	
+	We want to compute $AB$.
+	
+	Since both $A$ and $B$ are $2\times 2$, the product $AB$ will also be a $2\times 2$ matrix:
+	\[
+	AB =
+	\begin{bmatrix}
+		c_{11} & c_{12} \\
+		c_{21} & c_{22}
+	\end{bmatrix}.
+	\]
+	
+	\paragraph{Entry $c_{11}$:} row 1 of $A$ times column 1 of $B$:
+	\[
+	c_{11} = 1\cdot 2 + 2\cdot(-1) = 2 - 2 = 0.
+	\]
+	
+	\paragraph{Entry $c_{12}$:} row 1 of $A$ times column 2 of $B$:
+	\[
+	c_{12} = 1\cdot 0 + 2\cdot 5 = 0 + 10 = 10.
+	\]
+	
+	\paragraph{Entry $c_{21}$:} row 2 of $A$ times column 1 of $B$:
+	\[
+	c_{21} = 3\cdot 2 + 4\cdot(-1) = 6 - 4 = 2.
+	\]
+	
+	\paragraph{Entry $c_{22}$:} row 2 of $A$ times column 2 of $B$:
+	\[
+	c_{22} = 3\cdot 0 + 4\cdot 5 = 0 + 20 = 20.
+	\]
+	
+	Therefore,
+	\[
+	AB =
+	\begin{bmatrix}
+		0 & 10 \\
+		2 & 20
+	\end{bmatrix}.
+	\]
+	
+	\subsection*{Worked example: Multiplying a $2\times 3$ matrix by a $3\times 2$ matrix}
+	
+	Now consider
+	\[
+	A =
+	\begin{bmatrix}
+		1 & -1 & 2 \\
+		0 & 3 & 1
+	\end{bmatrix}
+	\quad \text{($2\times 3$ matrix)}
+	\]
+	and
+	\[
+	B =
+	\begin{bmatrix}
+		2 & 1 \\
+		-1 & 0 \\
+		3 & 4
+	\end{bmatrix}
+	\quad \text{($3\times 2$ matrix)}.
+	\]
+	
+	The product $AB$ is defined because the number of columns of $A$ (which is $3$) equals the number of rows of $B$ (which is $3$). The result will be a $2\times 2$ matrix.
+	
+	Write
+	\[
+	AB =
+	\begin{bmatrix}
+		d_{11} & d_{12} \\
+		d_{21} & d_{22}
+	\end{bmatrix}.
+	\]
+	
+	\paragraph{Entry $d_{11}$:} row 1 of $A$ times column 1 of $B$:
+	\[
+	d_{11} = 1\cdot 2 + (-1)\cdot(-1) + 2\cdot 3 = 2 + 1 + 6 = 9.
+	\]
+	
+	\paragraph{Entry $d_{12}$:} row 1 of $A$ times column 2 of $B$:
+	\[
+	d_{12} = 1\cdot 1 + (-1)\cdot 0 + 2\cdot 4 = 1 + 0 + 8 = 9.
+	\]
+	
+	\paragraph{Entry $d_{21}$:} row 2 of $A$ times column 1 of $B$:
+	\[
+	d_{21} = 0\cdot 2 + 3\cdot(-1) + 1\cdot 3 = 0 - 3 + 3 = 0.
+	\]
+	
+	\paragraph{Entry $d_{22}$:} row 2 of $A$ times column 2 of $B$:
+	\[
+	d_{22} = 0\cdot 1 + 3\cdot 0 + 1\cdot 4 = 0 + 0 + 4 = 4.
+	\]
+	
+	So
+	\[
+	AB =
+	\begin{bmatrix}
+		9 & 9 \\
+		0 & 4
+	\end{bmatrix}.
+	\]
 	
 \end{document}

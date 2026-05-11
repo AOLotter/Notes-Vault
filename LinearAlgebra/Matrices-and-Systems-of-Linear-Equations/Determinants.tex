@@ -1,0 +1,535 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\begin{document}
+	
+	\title{Study Notes: Determinants}
+	\author{Antony Lotter}
+	\date{\today}
+	\maketitle
+	
+	\section*{Determinant of a $2\times 2$ matrix}
+	
+	Consider
+	\[
+	A = \begin{bmatrix}
+		a & b \\
+		c & d
+	\end{bmatrix}.
+	\]
+	
+	The determinant of $A$ is
+	\[
+	\det(A) = \begin{vmatrix}
+		a & b \\
+		c & d
+	\end{vmatrix}
+	= ad - bc.
+	\]
+	
+	\bigskip
+	
+	\section*{Determinant of a $3\times 3$ matrix}
+	
+	Let
+	\[
+	A = \begin{bmatrix}
+		a_{11} & a_{12} & a_{13} \\
+		a_{21} & a_{22} & a_{23} \\
+		a_{31} & a_{32} & a_{33}
+	\end{bmatrix}.
+	\]
+	
+	A cofactor expansion along the first row gives
+	\[
+	\det(A) =
+	a_{11}
+	\begin{vmatrix}
+		a_{22} & a_{23} \\
+		a_{32} & a_{33}
+	\end{vmatrix}
+	-
+	a_{12}
+	\begin{vmatrix}
+		a_{21} & a_{23} \\
+		a_{31} & a_{33}
+	\end{vmatrix}
+	+
+	a_{13}
+	\begin{vmatrix}
+		a_{21} & a_{22} \\
+		a_{31} & a_{32}
+	\end{vmatrix}.
+	\]
+	
+	Using the $2\times 2$ formula inside, this becomes
+	\[
+	\det(A) =
+	a_{11}(a_{22}a_{33} - a_{23}a_{32})
+	-
+	a_{12}(a_{21}a_{33} - a_{23}a_{31})
+	+
+	a_{13}(a_{21}a_{32} - a_{22}a_{31}).
+	\]
+	
+	Equivalently (Sarrus' rule):
+	\[
+	\det(A) =
+	a_{11}a_{22}a_{33}
+	+
+	a_{12}a_{23}a_{31}
+	+
+	a_{13}a_{21}a_{32}
+	-
+	a_{13}a_{22}a_{31}
+	-
+	a_{11}a_{23}a_{32}
+	-
+	a_{12}a_{21}a_{33}.
+	\]
+	
+	\bigskip
+	
+	\section*{Determinant of a $4\times 4$ matrix}
+	
+	Let
+	\[
+	A =
+	\begin{bmatrix}
+		a_{11} & a_{12} & a_{13} & a_{14} \\
+		a_{21} & a_{22} & a_{23} & a_{24} \\
+		a_{31} & a_{32} & a_{33} & a_{34} \\
+		a_{41} & a_{42} & a_{43} & a_{44}
+	\end{bmatrix}.
+	\]
+	
+	The cofactor $C_{1j}$ of the entry $a_{1j}$ is
+	\[
+	C_{1j} = (-1)^{1+j} M_{1j},
+	\]
+	where $M_{1j}$ is the determinant of the $3\times 3$ minor obtained by deleting row 1 and column $j$.
+	
+	A cofactor expansion along the first row is
+	\[
+	\det(A) =
+	a_{11} C_{11}
+	+
+	a_{12} C_{12}
+	+
+	a_{13} C_{13}
+	+
+	a_{14} C_{14}.
+	\]
+	
+	Explicitly,
+	\[
+	\det(A) =
+	a_{11}
+	\begin{vmatrix}
+		a_{22} & a_{23} & a_{24} \\
+		a_{32} & a_{33} & a_{34} \\
+		a_{42} & a_{43} & a_{44}
+	\end{vmatrix}
+	-
+	a_{12}
+	\begin{vmatrix}
+		a_{21} & a_{23} & a_{24} \\
+		a_{31} & a_{33} & a_{34} \\
+		a_{41} & a_{43} & a_{44}
+	\end{vmatrix}
+	+
+	a_{13}
+	\begin{vmatrix}
+		a_{21} & a_{22} & a_{24} \\
+		a_{31} & a_{32} & a_{34} \\
+		a_{41} & a_{42} & a_{44}
+	\end{vmatrix}
+	-
+	a_{14}
+	\begin{vmatrix}
+		a_{21} & a_{22} & a_{23} \\
+		a_{31} & a_{32} & a_{33} \\
+		a_{41} & a_{42} & a_{43}
+	\end{vmatrix}.
+	\]
+	
+	Each $3\times 3$ determinant can be expanded using the $3\times 3$ formulas above.
+	
+	\bigskip
+	
+	\newpage
+	
+	\section*{Useful properties}
+	
+	For any $n\times n$ matrix $A$:
+	\begin{itemize}
+		\item $\det(A) = 0$ if and only if $A$ is singular (not invertible).
+		\item Swapping two rows multiplies the determinant by $-1$.
+		\item Multiplying a row by a scalar $k$ multiplies the determinant by $k$.
+		\item Adding a multiple of one row to another row does not change the determinant.
+		\item $\det(AB) = \det(A)\det(B)$ for any $n\times n$ matrices $A,B$.
+		\item $\det(A^{T}) = \det(A)$.
+	\end{itemize}
+	
+	\section*{\underline{Examples}$\downarrow$}
+	
+	\subsection*{Example 1: $2\times 2$ determinant}
+	
+	Compute the determinant of
+	\[
+	A =
+	\begin{bmatrix}
+		2 & -3 \\
+		4 & 1
+	\end{bmatrix}.
+	\]
+	
+	Using the formula $\det(A) = ad - bc$, we have
+	\[
+	\det(A) = (2)(1) - (-3)(4)
+	\]
+	\[
+	\det(A) = 2 - (-12)
+	\]
+	\[
+	\det(A) = 2 + 12 = 14.
+	\]
+	
+	\subsection*{Example 2: $3\times 3$ determinant (cofactor expansion)}
+	
+	Compute the determinant of
+	\[
+	B =
+	\begin{bmatrix}
+		1 & 2 & 3 \\
+		0 & -1 & 4 \\
+		2 & 1 & 0
+	\end{bmatrix}.
+	\]
+	
+	Expand along the first row:
+	\[
+	\det(B) =
+	1
+	\begin{vmatrix}
+		-1 & 4 \\
+		1 & 0
+	\end{vmatrix}
+	-
+	2
+	\begin{vmatrix}
+		0 & 4 \\
+		2 & 0
+	\end{vmatrix}
+	+
+	3
+	\begin{vmatrix}
+		0 & -1 \\
+		2 & 1
+	\end{vmatrix}.
+	\]
+	
+	Now evaluate each $2\times 2$ determinant:
+	\[
+	\begin{vmatrix}
+		-1 & 4 \\
+		1 & 0
+	\end{vmatrix}
+	= (-1)(0) - (4)(1) = -4,
+	\]
+	\[
+	\begin{vmatrix}
+		0 & 4 \\
+		2 & 0
+	\end{vmatrix}
+	= (0)(0) - (4)(2) = -8,
+	\]
+	\[
+	\begin{vmatrix}
+		0 & -1 \\
+		2 & 1
+	\end{vmatrix}
+	= (0)(1) - (-1)(2) = 2.
+	\]
+	
+	Substitute back:
+	\[
+	\det(B) = 1(-4) - 2(-8) + 3(2)
+	\]
+	\[
+	\det(B) = -4 + 16 + 6
+	\]
+	\[
+	\det(B) = 18.
+	\]
+	
+	\subsection*{Example 3: $3\times 3$ determinant (Sarrus' rule)}
+	
+	Compute the determinant of
+	\[
+	C =
+	\begin{bmatrix}
+		2 & 0 & 1 \\
+		-1 & 3 & 2 \\
+		4 & -2 & 1
+	\end{bmatrix}.
+	\]
+	
+	Using Sarrus' rule, write the first two columns again:
+	\[
+	\begin{array}{ccc|cc}
+		2 & 0 & 1 & 2 & 0 \\
+		-1 & 3 & 2 & -1 & 3 \\
+		4 & -2 & 1 & 4 & -2
+	\end{array}
+	\]
+	
+	Sum of downward diagonals:
+	\[
+	(2)(3)(1) + (0)(2)(4) + (1)(-1)(-2) = 6 + 0 + 2 = 8.
+	\]
+	
+	Sum of upward diagonals:
+	\[
+	(1)(3)(4) + (2)(2)(2) + (0)(-1)(1) = 12 + 8 + 0 = 20.
+	\]
+	
+	Therefore,
+	\[
+	\det(C) = 8 - 20 = -12.
+	\]
+	
+	\subsection*{Example 4: $4\times 4$ determinant with zeros}
+	
+	Compute the determinant of
+	\[
+	D =
+	\begin{bmatrix}
+		1 & 0 & 2 & -1 \\
+		3 & 1 & 0 & 2 \\
+		0 & -2 & 1 & 0 \\
+		2 & 0 & 1 & 1
+	\end{bmatrix}.
+	\]
+	
+	Expand along the first row (because it has a zero):
+	\[
+	\det(D) =
+	1 \cdot C_{11}
+	+
+	0 \cdot C_{12}
+	+
+	2 \cdot C_{13}
+	+
+	(-1) \cdot C_{14}.
+	\]
+	
+	So
+	\[
+	\det(D) = 1 \cdot
+	\begin{vmatrix}
+		1 & 0 & 2 \\
+		-2 & 1 & 0 \\
+		0 & 1 & 1
+	\end{vmatrix}
+	+
+	2 \cdot
+	\begin{vmatrix}
+		3 & 1 & 2 \\
+		0 & -2 & 0 \\
+		2 & 0 & 1
+	\end{vmatrix}
+	-
+	1 \cdot
+	\begin{vmatrix}
+		3 & 1 & 0 \\
+		0 & -2 & 1 \\
+		2 & 0 & 1
+	\end{vmatrix}.
+	\]
+	
+	Call these three $3\times 3$ determinants $D_1$, $D_2$, and $D_3$.
+	
+	\newpage
+	
+	\paragraph{Compute $D_1$:}
+	\[
+	D_1 =
+	\begin{vmatrix}
+		1 & 0 & 2 \\
+		-2 & 1 & 0 \\
+		0 & 1 & 1
+	\end{vmatrix}.
+	\]
+	
+	Expand along the first row:
+	\[
+	D_1 =
+	1
+	\begin{vmatrix}
+		1 & 0 \\
+		1 & 1
+	\end{vmatrix}
+	-
+	0
+	\begin{vmatrix}
+		-2 & 0 \\
+		0 & 1
+	\end{vmatrix}
+	+
+	2
+	\begin{vmatrix}
+		-2 & 1 \\
+		0 & 1
+	\end{vmatrix}.
+	\]
+	
+	Compute the $2\times 2$ determinants:
+	\[
+	\begin{vmatrix}
+		1 & 0 \\
+		1 & 1
+	\end{vmatrix}
+	= (1)(1) - (0)(1) = 1,
+	\]
+	\[
+	\begin{vmatrix}
+		-2 & 1 \\
+		0 & 1
+	\end{vmatrix}
+	= (-2)(1) - (1)(0) = -2.
+	\]
+	
+	Thus
+	\[
+	D_1 = 1(1) + 2(-2) = 1 - 4 = -3.
+	\]
+	
+	\newpage
+	
+	\paragraph{Compute $D_2$:}
+	\[
+	D_2 =
+	\begin{vmatrix}
+		3 & 1 & 2 \\
+		0 & -2 & 0 \\
+		2 & 0 & 1
+	\end{vmatrix}.
+	\]
+	
+	Expand along the second row (it has a zero):
+	\[
+	D_2 =
+	0 \cdot
+	\begin{vmatrix}
+		1 & 2 \\
+		0 & 1
+	\end{vmatrix}
+	-
+	(-2) \cdot
+	\begin{vmatrix}
+		3 & 2 \\
+		2 & 1
+	\end{vmatrix}
+	+
+	0 \cdot
+	\begin{vmatrix}
+		3 & 1 \\
+		2 & 0
+	\end{vmatrix}.
+	\]
+	
+	Only the middle term remains:
+	\[
+	D_2 = 2
+	\begin{vmatrix}
+		3 & 2 \\
+		2 & 1
+	\end{vmatrix}.
+	\]
+	
+	Compute the $2\times 2$ determinant:
+	\[
+	\begin{vmatrix}
+		3 & 2 \\
+		2 & 1
+	\end{vmatrix}
+	= (3)(1) - (2)(2) = 3 - 4 = -1.
+	\]
+	
+	So
+	\[
+	D_2 = 2(-1) = -2.
+	\]
+	
+	\paragraph{Compute $D_3$:}
+	\[
+	D_3 =
+	\begin{vmatrix}
+		3 & 1 & 0 \\
+		0 & -2 & 1 \\
+		2 & 0 & 1
+	\end{vmatrix}.
+	\]
+	
+	Expand along the first row (because of the zero):
+	\[
+	D_3 =
+	3
+	\begin{vmatrix}
+		-2 & 1 \\
+		0 & 1
+	\end{vmatrix}
+	-
+	1
+	\begin{vmatrix}
+		0 & 1 \\
+		2 & 1
+	\end{vmatrix}
+	+
+	0 \cdot
+	\begin{vmatrix}
+		0 & -2 \\
+		2 & 0
+	\end{vmatrix}.
+	\]
+	
+	Compute the $2\times 2$ determinants:
+	\[
+	\begin{vmatrix}
+		-2 & 1 \\
+		0 & 1
+	\end{vmatrix}
+	= (-2)(1) - (1)(0) = -2,
+	\]
+	\[
+	\begin{vmatrix}
+		0 & 1 \\
+		2 & 1
+	\end{vmatrix}
+	= (0)(1) - (1)(2) = -2.
+	\]
+	
+	Thus
+	\[
+	D_3 = 3(-2) - 1(-2) = -6 + 2 = -4.
+	\]
+	
+	\paragraph{Combine to get $\det(D)$:}
+	\[
+	\det(D) = 1\cdot D_1 + 2\cdot D_2 - 1\cdot D_3
+	\]
+	\[
+	\det(D) = (-3) + 2(-2) - (-4)
+	\]
+	\[
+	\det(D) = -3 - 4 + 4 = -3.
+	\]
+	
+	So
+	\[
+	\det(D) = -3.
+	\]
+	
+\end{document}
