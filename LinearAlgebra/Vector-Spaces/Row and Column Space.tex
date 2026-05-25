@@ -1,0 +1,699 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{setspace}
+
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric,
+	decorations.pathreplacing, backgrounds, fit, matrix}
+
+%% ─── Hyperref setup ──────────────────────────────────────────────────────────
+\hypersetup{
+	colorlinks=true,
+	linkcolor=MidnightBlue,
+	urlcolor=MidnightBlue,
+	citecolor=MidnightBlue,
+	pdftitle={Lecture Notes: Row Space, Column Space, and Linear Systems},
+	pdfauthor={Lecture Notes},
+}
+
+%% ─── Custom Macros ───────────────────────────────────────────────────────────
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vv}[1]{\mathbf{#1}}
+\newcommand{\vzero}{\mathbf{0}}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\nullity}{\operatorname{nullity}}
+\newcommand{\Null}{\operatorname{Null}}
+\newcommand{\Col}{\operatorname{Col}}
+\newcommand{\Row}{\operatorname{Row}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+%% ─── tcolorbox environments ──────────────────────────────────────────────────
+\tcbuselibrary{theorems, skins, breakable}
+
+\newtcbtheorem[number within=section]{defbox}{Definition}{
+	enhanced,
+	breakable,
+	colback=MidnightBlue!6!white,
+	colframe=MidnightBlue!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	description delimiters parenthesis,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=MidnightBlue!70!black, colframe=MidnightBlue!70!black},
+	title={Definition},
+}{def}
+
+\newtcbtheorem[number within=section]{thmbox}{Theorem}{
+	enhanced,
+	breakable,
+	colback=ForestGreen!6!white,
+	colframe=ForestGreen!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=ForestGreen!70!black, colframe=ForestGreen!70!black},
+	title={Theorem},
+}{thm}
+
+\newtcbtheorem[number within=section]{remarkbox}{Remark}{
+	enhanced,
+	breakable,
+	colback=BurntOrange!6!white,
+	colframe=BurntOrange!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=BurntOrange!70!black, colframe=BurntOrange!70!black},
+	title={Remark},
+}{rem}
+
+\newtcbtheorem[number within=section]{exbox}{Example}{
+	enhanced,
+	breakable,
+	colback=Plum!6!white,
+	colframe=Plum!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=Plum!70!black, colframe=Plum!70!black},
+	title={Example},
+}{ex}
+
+\newtcbtheorem[number within=section]{propbox}{Proposition}{
+	enhanced,
+	breakable,
+	colback=Maroon!6!white,
+	colframe=Maroon!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=Maroon!70!black, colframe=Maroon!70!black},
+	title={Proposition},
+}{prop}
+
+\newtcbtheorem[number within=section]{corbox}{Corollary}{
+	enhanced,
+	breakable,
+	colback=RoyalBlue!6!white,
+	colframe=RoyalBlue!70!black,
+	fonttitle=\bfseries,
+	separator sign none,
+	attach boxed title to top left={yshift=-2mm, xshift=6mm},
+	boxed title style={colback=RoyalBlue!70!black, colframe=RoyalBlue!70!black},
+	title={Corollary},
+}{cor}
+
+%% ─── Header / Footer ─────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textit{Row Space, Column Space \& Linear Systems}}
+\fancyhead[R]{\small\textit{Linear Algebra}}
+\fancyfoot[C]{\thepage}
+
+%% ─── Title formatting ────────────────────────────────────────────────────────
+\titleformat{\section}[block]{\large\bfseries\color{MidnightBlue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{MidnightBlue!80!black}}{\thesubsection}{0.5em}{}
+
+%% ─── Spacing ─────────────────────────────────────────────────────────────────
+\onehalfspacing
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+%% ═════════════════════════════════════════════════════════════════════════════
+\begin{document}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	%% ─── Title Page ──────────────────────────────────────────────────────────────
+	\begin{titlepage}
+		\centering
+		\vspace*{3cm}
+		{\Huge\bfseries\color{MidnightBlue} Linear Algebra\\[0.4em]
+			\large\color{black} Lecture Notes}\\[1.5cm]
+		\rule{0.6\linewidth}{0.8pt}\\[0.6cm]
+		{\LARGE\bfseries Row Space, Column Space\\[0.3em] and Linear Systems}\\[0.4cm]
+		\rule{0.6\linewidth}{0.8pt}\\[1.5cm]
+		{\large Topics covered:}\\[0.5em]
+		\begin{minipage}{0.55\linewidth}
+			\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+				\item Row Space and Column Space
+				\item Linear Systems
+				\item Consistency Theorem for Linear Systems
+				\item Rank--Nullity Theorem
+				\item The Column Space
+			\end{itemize}
+		\end{minipage}
+		\vfill
+		{\large \today}
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{Subspaces Associated with a Matrix}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	Every matrix \(\mat{A} \in \R^{m \times n}\) naturally gives rise to two fundamental subspaces: the \emph{row space} and the \emph{column space}. Understanding these subspaces is central to the theory of linear systems.
+	
+	\subsection{Row Space}
+	
+	\begin{defbox}{Row Space}{}
+		Let \(\mat{A}\) be an \(m \times n\) matrix with rows
+		\(\vv{r}_1, \vv{r}_2, \ldots, \vv{r}_m \in \R^{1 \times n}\).
+		The \textbf{row space} of \(\mat{A}\), denoted \(\Row(\mat{A})\), is the subspace of
+		\(\R^n\) spanned by the rows of \(\mat{A}\):
+		\[
+		\Row(\mat{A}) = \Span\{\vv{r}_1, \vv{r}_2, \ldots, \vv{r}_m\}.
+		\]
+	\end{defbox}
+	
+	\begin{propbox}{Row Operations Preserve the Row Space}{}
+		Elementary row operations on a matrix \(\mat{A}\) do \emph{not} change the row space:
+		\[
+		\Row(\mat{A}) = \Row(\mat{R}),
+		\]
+		where \(\mat{R}\) is any matrix obtained from \(\mat{A}\) by elementary row operations
+		(e.g.\ the reduced row echelon form).
+	\end{propbox}
+	
+	\begin{remarkbox}{}{}
+		This proposition means we can find a basis for \(\Row(\mat{A})\) by row reducing
+		\(\mat{A}\) to (reduced) row echelon form \(\mat{R}\) and taking the \emph{non-zero rows}
+		of \(\mat{R}\). These non-zero rows form a basis for \(\Row(\mat{A})\).
+	\end{remarkbox}
+	
+	\begin{exbox}{Finding a Basis for the Row Space}{}
+		Let
+		\[
+		\mat{A} =
+		\begin{pmatrix}
+			1 & 2 & 3 \\
+			4 & 5 & 6 \\
+			7 & 8 & 9
+		\end{pmatrix}.
+		\]
+		Row reduce \(\mat{A}\):
+		\[
+		\mat{A}
+		\xrightarrow{R_2 \leftarrow R_2 - 4R_1}
+		\begin{pmatrix}
+			1 & 2 & 3 \\
+			0 & -3 & -6 \\
+			7 & 8 & 9
+		\end{pmatrix}
+		\xrightarrow{R_3 \leftarrow R_3 - 7R_1}
+		\begin{pmatrix}
+			1 & 2 & 3 \\
+			0 & -3 & -6 \\
+			0 & -6 & -12
+		\end{pmatrix}
+		\xrightarrow{R_3 \leftarrow R_3 - 2R_2}
+		\begin{pmatrix}
+			1 & 2 & 3 \\
+			0 & -3 & -6 \\
+			0 & 0 & 0
+		\end{pmatrix}.
+		\]
+		The non-zero rows of the row echelon form are
+		\(\vv{r}_1 = (1,\,2,\,3)\) and \(\vv{r}_2 = (0,\,-3,\,-6)\).\\[4pt]
+		Therefore
+		\[
+		\Row(\mat{A}) = \Span\bigl\{(1,2,3),\,(0,-3,-6)\bigr\},
+		\quad \dim\bigl(\Row(\mat{A})\bigr) = 2.
+		\]
+	\end{exbox}
+	
+	\subsection{Column Space}
+	
+	\begin{defbox}{Column Space}{}
+		Let \(\mat{A}\) be an \(m \times n\) matrix with columns
+		\(\vv{a}_1, \vv{a}_2, \ldots, \vv{a}_n \in \R^m\).
+		The \textbf{column space} of \(\mat{A}\), denoted \(\Col(\mat{A})\), is the subspace of
+		\(\R^m\) spanned by the columns of \(\mat{A}\):
+		\[
+		\Col(\mat{A}) = \Span\{\vv{a}_1, \vv{a}_2, \ldots, \vv{a}_n\}.
+		\]
+	\end{defbox}
+	
+	\begin{remarkbox}{}{}
+		\(\Col(\mat{A}) = \Row(\mat{A}^T)\). Thus a basis for the column space of \(\mat{A}\)
+		can be obtained by finding a basis for the row space of \(\mat{A}^T\).
+		Equivalently, the \emph{pivot columns} of \(\mat{A}\) (identified by row reduction)
+		form a basis for \(\Col(\mat{A})\), using the \textbf{original} columns of \(\mat{A}\),
+		not those of the row-reduced form.
+	\end{remarkbox}
+	
+	\begin{exbox}{Finding a Basis for the Column Space}{}
+		Using the matrix from the previous example,
+		\[
+		\mat{A} =
+		\begin{pmatrix}
+			1 & 2 & 3 \\
+			4 & 5 & 6 \\
+			7 & 8 & 9
+		\end{pmatrix}.
+		\]
+		From the row reduction, the pivot positions are in columns 1 and 2.
+		Therefore a basis for \(\Col(\mat{A})\) is formed by columns 1 and 2 of the
+		\emph{original} matrix:
+		\[
+		\Col(\mat{A}) = \Span\!\left\{
+		\begin{pmatrix}1\\4\\7\end{pmatrix},\;
+		\begin{pmatrix}2\\5\\8\end{pmatrix}
+		\right\}, \quad
+		\dim\bigl(\Col(\mat{A})\bigr) = 2.
+		\]
+	\end{exbox}
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{Linear Systems}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	\subsection{Formulation}
+	
+	A \textbf{system of linear equations} (or \emph{linear system}) in \(n\) unknowns
+	\(x_1, x_2, \ldots, x_n\) is a collection of \(m\) equations of the form
+	\[
+	\begin{cases}
+		a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1\\
+		a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2\\
+		\quad\vdots\\
+		a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m
+	\end{cases}
+	\]
+	where \(a_{ij}, b_i \in \R\).
+	
+	\subsection{Matrix--Vector Form}
+	
+	The system above can be written compactly as
+	\[
+	\mat{A}\vv{x} = \vv{b},
+	\]
+	where \(\mat{A} = (a_{ij}) \in \R^{m \times n}\) is the \textbf{coefficient matrix},
+	\(\vv{x} = (x_1, \ldots, x_n)^T \in \R^n\), and \(\vv{b} = (b_1, \ldots, b_m)^T \in \R^m\).
+	
+	\begin{defbox}{Augmented Matrix}{}
+		The \textbf{augmented matrix} of the system \(\mat{A}\vv{x} = \vv{b}\) is the
+		\(m \times (n+1)\) matrix
+		\[
+		[\,\mat{A} \mid \vv{b}\,].
+		\]
+		Row operations on the augmented matrix correspond exactly to legal operations on the
+		linear system and preserve the solution set.
+	\end{defbox}
+	
+	\subsection{Solution Types}
+	
+	A linear system \(\mat{A}\vv{x} = \vv{b}\) has exactly one of the following:
+	\begin{itemize}[leftmargin=2em, itemsep=2pt]
+		\item \textbf{No solution} (inconsistent),
+		\item \textbf{Exactly one solution} (consistent, unique),
+		\item \textbf{Infinitely many solutions} (consistent, non-unique).
+	\end{itemize}
+	
+	\begin{exbox}{Solving a Linear System by Row Reduction}{}
+		Solve the system
+		\[
+		\begin{cases}
+			x_1 + 2x_2 + x_3 = 4\\
+			2x_1 + 3x_2 - x_3 = 1\\
+			3x_1 + 5x_2 \phantom{{}+x_3} = 5
+		\end{cases}
+		\]
+		Augmented matrix and row reduction:
+		\[
+		\begin{pmatrix}[ccc|c]
+			1 & 2 & 1 & 4\\
+			2 & 3 & -1 & 1\\
+			3 & 5 & 0 & 5
+		\end{pmatrix}
+		\rightarrow
+		\begin{pmatrix}[ccc|c]
+			1 & 2 & 1 & 4\\
+			0 & -1 & -3 & -7\\
+			0 & -1 & -3 & -7
+		\end{pmatrix}
+		\rightarrow
+		\begin{pmatrix}[ccc|c]
+			1 & 2 & 1 & 4\\
+			0 & 1 & 3 & 7\\
+			0 & 0 & 0 & 0
+		\end{pmatrix}
+		\rightarrow
+		\begin{pmatrix}[ccc|c]
+			1 & 0 & -5 & -10\\
+			0 & 1 & 3 & 7\\
+			0 & 0 & 0 & 0
+		\end{pmatrix}
+		\]
+		Free variable: \(x_3 = t \in \R\). The general solution is
+		\[
+		\vv{x} =
+		\begin{pmatrix}-10\\7\\0\end{pmatrix}
+		+ t\begin{pmatrix}5\\-3\\1\end{pmatrix}, \quad t \in \R.
+		\]
+	\end{exbox}
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{Consistency Theorem for Linear Systems}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	The following theorem gives a clean characterisation of when a linear system has
+	a solution, phrased entirely in terms of the column space of the coefficient matrix.
+	
+	\begin{thmbox}{Consistency Theorem}{}
+		The linear system \(\mat{A}\vv{x} = \vv{b}\) is \textbf{consistent}
+		(i.e.\ has at least one solution) if and only if
+		\[
+		\vv{b} \in \Col(\mat{A}).
+		\]
+		Equivalently, the system is consistent if and only if
+		\[
+		\rank(\mat{A}) = \rank([\,\mat{A} \mid \vv{b}\,]).
+		\]
+	\end{thmbox}
+	
+	\begin{remarkbox}{}{}
+		The second form of the Consistency Theorem is practically useful:
+		\begin{itemize}[leftmargin=2em, itemsep=2pt]
+			\item Row reduce the augmented matrix \([\mat{A} \mid \vv{b}]\).
+			\item If a row of the form \((0\;\cdots\;0 \mid c)\) with \(c \neq 0\) appears,
+			the system is \emph{inconsistent}.
+			\item Otherwise the system is \emph{consistent}.
+		\end{itemize}
+	\end{remarkbox}
+	
+	\begin{thmbox}{Uniqueness of Solutions}{}
+		Suppose \(\mat{A}\vv{x} = \vv{b}\) is consistent. Then the solution is \textbf{unique}
+		if and only if \(\Null(\mat{A}) = \{\vzero\}\), i.e.\ the only solution to
+		\(\mat{A}\vv{x} = \vzero\) is the trivial solution.  Equivalently, uniqueness holds
+		if and only if \(\rank(\mat{A}) = n\) (no free variables).
+	\end{thmbox}
+	
+	\begin{exbox}{Checking Consistency}{}
+		Is the system
+		\[
+		\mat{A}\vv{x} = \vv{b}, \quad
+		\mat{A} =
+		\begin{pmatrix}
+			1 & 3 \\
+			2 & 6
+		\end{pmatrix},
+		\quad
+		\vv{b} = \begin{pmatrix}2\\5\end{pmatrix}
+		\]
+		consistent?  Row reduce the augmented matrix:
+		\[
+		\begin{pmatrix}[cc|c]
+			1 & 3 & 2\\
+			2 & 6 & 5
+		\end{pmatrix}
+		\xrightarrow{R_2 \leftarrow R_2 - 2R_1}
+		\begin{pmatrix}[cc|c]
+			1 & 3 & 2\\
+			0 & 0 & 1
+		\end{pmatrix}.
+		\]
+		The last row represents \(0 = 1\), a contradiction.
+		Since \(\rank(\mat{A}) = 1 < 2 = \rank([\mat{A}\mid\vv{b}])\), the system is
+		\textbf{inconsistent}.  Equivalently, \(\vv{b} \notin \Col(\mat{A})\).
+	\end{exbox}
+	
+	\begin{corbox}{Consistent System for all \(\vv{b}\)}{}
+		The system \(\mat{A}\vv{x} = \vv{b}\) is consistent for \emph{every}
+		\(\vv{b} \in \R^m\) if and only if
+		\[
+		\Col(\mat{A}) = \R^m \iff \rank(\mat{A}) = m.
+		\]
+	\end{corbox}
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{Null Space and the Rank--Nullity Theorem}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	\subsection{Null Space}
+	
+	\begin{defbox}{Null Space}{}
+		The \textbf{null space} (or \emph{kernel}) of an \(m \times n\) matrix \(\mat{A}\)
+		is the set of all solutions to the homogeneous system:
+		\[
+		\Null(\mat{A}) = \{\,\vv{x} \in \R^n : \mat{A}\vv{x} = \vzero\,\}.
+		\]
+	\end{defbox}
+	
+	\begin{propbox}{Null Space is a Subspace}{}
+		\(\Null(\mat{A})\) is a subspace of \(\R^n\).
+	\end{propbox}
+	
+	\begin{proof}
+		(i) \(\vzero \in \Null(\mat{A})\) since \(\mat{A}\vzero = \vzero\). \\
+		(ii) If \(\vv{u}, \vv{v} \in \Null(\mat{A})\), then \(\mat{A}(\vv{u}+\vv{v}) = \mat{A}\vv{u} + \mat{A}\vv{v} = \vzero + \vzero = \vzero\). \\
+		(iii) If \(\vv{u} \in \Null(\mat{A})\) and \(c \in \R\), then \(\mat{A}(c\vv{u}) = c\mat{A}\vv{u} = c\vzero = \vzero\).
+	\end{proof}
+	
+	\begin{defbox}{Rank and Nullity}{}
+		Let \(\mat{A}\) be an \(m \times n\) matrix.
+		\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+			\item The \textbf{rank} of \(\mat{A}\), written \(\rank(\mat{A})\), is the dimension of
+			\(\Col(\mat{A})\) (equivalently, of \(\Row(\mat{A})\)):
+			\[
+			\rank(\mat{A}) = \dim\bigl(\Col(\mat{A})\bigr) = \dim\bigl(\Row(\mat{A})\bigr).
+			\]
+			\item The \textbf{nullity} of \(\mat{A}\), written \(\nullity(\mat{A})\), is the dimension of
+			\(\Null(\mat{A})\):
+			\[
+			\nullity(\mat{A}) = \dim\bigl(\Null(\mat{A})\bigr).
+			\]
+		\end{itemize}
+	\end{defbox}
+	
+	\begin{remarkbox}{}{}
+		\(\rank(\mat{A})\) equals the number of \emph{pivot columns} (leading entries) in the
+		row echelon form of \(\mat{A}\).  The number of \emph{free variables} equals the
+		nullity.
+	\end{remarkbox}
+	
+	\subsection{The Rank--Nullity Theorem}
+	
+	\begin{thmbox}{Rank--Nullity Theorem (Dimension Theorem)}{}
+		Let \(\mat{A}\) be an \(m \times n\) matrix.  Then
+		\[
+		\boxed{\rank(\mat{A}) + \nullity(\mat{A}) = n.}
+		\]
+	\end{thmbox}
+	
+	In words: the number of pivot variables plus the number of free variables equals the
+	total number of unknowns.
+	
+	\begin{proof}[Sketch of Proof]
+		Let \(r = \rank(\mat{A})\).  Row reduce \(\mat{A}\) to row echelon form.  There are
+		\(r\) pivot columns and \(n - r\) free columns.  Each free variable contributes one
+		basis vector (a \emph{special solution}) to \(\Null(\mat{A})\), so
+		\(\nullity(\mat{A}) = n - r\).  Therefore \(r + (n - r) = n\). \qed
+	\end{proof}
+	
+	\begin{exbox}{Applying the Rank--Nullity Theorem}{}
+		Let
+		\[
+		\mat{A} =
+		\begin{pmatrix}
+			1 & 2 & 0 & -1 \\
+			0 & 0 & 1 &  3 \\
+			0 & 0 & 0 &  0
+		\end{pmatrix}.
+		\]
+		This matrix is already in row echelon form.  There are \(r = 2\) pivot columns
+		(columns 1 and 3) and \(n = 4\) unknowns.  By the Rank--Nullity Theorem:
+		\[
+		\rank(\mat{A}) = 2, \qquad
+		\nullity(\mat{A}) = 4 - 2 = 2.
+		\]
+		The free variables are \(x_2 = s\) and \(x_4 = t\).  Back-substituting gives the
+		general homogeneous solution:
+		\[
+		\vv{x} = s\begin{pmatrix}-2\\1\\0\\0\end{pmatrix}
+		+ t\begin{pmatrix}1\\0\\-3\\1\end{pmatrix}, \quad s,t \in \R.
+		\]
+		A basis for \(\Null(\mat{A})\) is
+		\(\left\{\begin{pmatrix}-2\\1\\0\\0\end{pmatrix},\;\begin{pmatrix}1\\0\\-3\\1\end{pmatrix}\right\}\).
+	\end{exbox}
+	
+	\begin{corbox}{Invertibility Criterion}{}
+		An \(n \times n\) square matrix \(\mat{A}\) is \textbf{invertible} if and only if
+		\[
+		\rank(\mat{A}) = n \iff \nullity(\mat{A}) = 0.
+		\]
+	\end{corbox}
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{The Column Space in Depth}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	\subsection{Characterisation via Linear Combinations}
+	
+	A vector \(\vv{b} \in \R^m\) belongs to \(\Col(\mat{A})\) if and only if there exist
+	scalars \(c_1, \ldots, c_n\) such that
+	\[
+	c_1\vv{a}_1 + c_2\vv{a}_2 + \cdots + c_n\vv{a}_n = \vv{b},
+	\]
+	i.e.\ if and only if the system \(\mat{A}\vv{x} = \vv{b}\) is consistent. This
+	re-states the Consistency Theorem in a geometric language.
+	
+	\subsection{Basis for the Column Space}
+	
+	\begin{thmbox}{Pivot Column Theorem}{}
+		Let \(\mat{R}\) be the row echelon form of \(\mat{A}\).  The \textbf{pivot columns
+			of \(\mat{A}\)} (the original columns corresponding to pivot positions in \(\mat{R}\))
+		form a basis for \(\Col(\mat{A})\).
+	\end{thmbox}
+	
+	\begin{remarkbox}{}{}
+		\textbf{Important:} Use the pivot columns from \(\mat{A}\), not from \(\mat{R}\).
+		The column space of \(\mat{R}\) is generally \emph{different} from \(\Col(\mat{A})\),
+		because column operations change the column space (unlike row operations, which do not
+		change the row space).
+	\end{remarkbox}
+	
+	\begin{exbox}{Complete Column Space Analysis}{}
+		Let
+		\[
+		\mat{A} =
+		\begin{pmatrix}
+			2 & 1 & -1 & 3 \\
+			4 & 2 & -2 & 6 \\
+			1 & 0 &  1 & 2
+		\end{pmatrix}.
+		\]
+		\textbf{Step 1: Row reduce.}
+		\[
+		\mat{A}
+		\xrightarrow{R_2 \leftarrow R_2 - 2R_1}
+		\begin{pmatrix}
+			2 & 1 & -1 & 3 \\
+			0 & 0 & 0 & 0 \\
+			1 & 0 & 1 & 2
+		\end{pmatrix}
+		\xrightarrow{R_1 \leftrightarrow R_3}
+		\begin{pmatrix}
+			1 & 0 & 1 & 2 \\
+			0 & 0 & 0 & 0 \\
+			2 & 1 & -1 & 3
+		\end{pmatrix}
+		\xrightarrow{R_3 \leftarrow R_3 - 2R_1}
+		\begin{pmatrix}
+			1 & 0 & 1 & 2 \\
+			0 & 1 & -3 & -1 \\
+			0 & 0 & 0 & 0
+		\end{pmatrix}.
+		\]
+		\textbf{Step 2: Identify pivots.}
+		Pivot columns are 1 and 2.\\[4pt]
+		\textbf{Step 3: Basis for \(\Col(\mat{A})\).}
+		\[
+		\text{Basis} = \left\{
+		\vv{a}_1 = \begin{pmatrix}2\\4\\1\end{pmatrix},\quad
+		\vv{a}_2 = \begin{pmatrix}1\\2\\0\end{pmatrix}
+		\right\}.
+		\]
+		\textbf{Step 4: Summary.}
+		\[
+		\rank(\mat{A}) = 2, \quad
+		\nullity(\mat{A}) = 4 - 2 = 2, \quad
+		\dim\bigl(\Col(\mat{A})\bigr) = 2.
+		\]
+	\end{exbox}
+	
+	\subsection{Relationship Between the Four Fundamental Subspaces}
+	
+	For an \(m \times n\) matrix \(\mat{A}\), the four \emph{fundamental subspaces} are:
+	
+	\begin{center}
+		\begin{tabular}{@{}lll@{}}
+			\toprule
+			\textbf{Subspace} & \textbf{Notation} & \textbf{Lives in} \\
+			\midrule
+			Row space       & \(\Row(\mat{A})\)            & \(\R^n\) \\
+			Null space      & \(\Null(\mat{A})\)           & \(\R^n\) \\
+			Column space    & \(\Col(\mat{A})\)            & \(\R^m\) \\
+			Left null space & \(\Null(\mat{A}^T)\)         & \(\R^m\) \\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	
+	\begin{thmbox}{Orthogonality of Fundamental Subspaces}{}
+		\[
+		\Row(\mat{A}) \perp \Null(\mat{A}) \quad \text{in } \R^n,
+		\]
+		\[
+		\Col(\mat{A}) \perp \Null(\mat{A}^T) \quad \text{in } \R^m.
+		\]
+		Moreover,
+		\[
+		\dim\bigl(\Row(\mat{A})\bigr) + \dim\bigl(\Null(\mat{A})\bigr) = n,
+		\]
+		\[
+		\dim\bigl(\Col(\mat{A})\bigr) + \dim\bigl(\Null(\mat{A}^T)\bigr) = m.
+		\]
+	\end{thmbox}
+	
+	\begin{remarkbox}{Visual Summary}{}
+		The Rank--Nullity Theorem and the Consistency Theorem connect all five objects:
+		$\mat{A}$, $\vv{b}$, $\Col(\mat{A})$, $\Null(\mat{A})$, and $\rank(\mat{A})$.
+		Together they give a complete picture of when and how many solutions a linear system
+		possesses.
+	\end{remarkbox}
+	
+	%% ═════════════════════════════════════════════════════════════════════════════
+	\section{Summary and Key Results}
+	%% ═════════════════════════════════════════════════════════════════════════════
+	
+	\begin{tcolorbox}[
+		enhanced, breakable,
+		colback=gray!8!white,
+		colframe=gray!60!black,
+		fonttitle=\bfseries,
+		title={Key Results at a Glance},
+		attach boxed title to top left={yshift=-2mm, xshift=6mm},
+		boxed title style={colback=gray!60!black}
+		]
+		\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=6pt]
+			\item \textbf{Row space basis:} Non-zero rows of the row echelon form of \(\mat{A}\).
+			
+			\item \textbf{Column space basis:} Pivot columns of the \emph{original} \(\mat{A}\).
+			
+			\item \textbf{Consistency Theorem:}
+			\(\mat{A}\vv{x}=\vv{b}\) is consistent \(\iff \vv{b}\in\Col(\mat{A})\)
+			\(\iff \rank(\mat{A})=\rank([\mat{A}\mid\vv{b}])\).
+			
+			\item \textbf{Rank--Nullity Theorem:}
+			\(\rank(\mat{A}) + \nullity(\mat{A}) = n\).
+			
+			\item \textbf{Unique solution:} consistent system has a unique solution
+			\(\iff \rank(\mat{A})=n\).
+			
+			\item \textbf{Surjectivity:} \(\mat{A}\vv{x}=\vv{b}\) consistent for all
+			\(\vv{b}\in\R^m \iff \rank(\mat{A})=m\).
+			
+			\item \textbf{Invertibility (square):} \(\mat{A}\) invertible \(\iff\)
+			\(\rank(\mat{A})=n \iff \nullity(\mat{A})=0\).
+		\end{enumerate}
+	\end{tcolorbox}
+	
+	%% ─── End ─────────────────────────────────────────────────────────────────────
+\end{document}

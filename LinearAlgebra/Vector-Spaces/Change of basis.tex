@@ -1,0 +1,248 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usetikzlibrary{
+	arrows.meta, calc, positioning, shapes.geometric,
+	decorations.pathreplacing, backgrounds, fit, matrix
+}
+
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, skins, breakable}
+
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{setspace}
+
+% ─── Page Geometry ────────────────────────────────────────────────────────────
+\geometry{margin=2.5cm, top=3cm, bottom=3cm}
+\setlength{\headheight}{14pt}
+\setstretch{1.15}
+
+% ─── Colours ──────────────────────────────────────────────────────────────────
+\definecolor{axiomblue}{RGB}{30, 80, 160}
+\definecolor{defgreen}{RGB}{20, 130, 80}
+\definecolor{thmred}{RGB}{160, 30, 40}
+\definecolor{notegray}{RGB}{90, 90, 90}
+\definecolor{shadeblue}{RGB}{230, 240, 255}
+\definecolor{shadegreen}{RGB}{225, 248, 235}
+\definecolor{shadered}{RGB}{255, 235, 235}
+\definecolor{shadeyellow}{RGB}{255, 252, 220}
+\definecolor{purpleshade}{RGB}{240, 230, 255}
+\definecolor{purpledark}{RGB}{100, 30, 160}
+\definecolor{orangeshade}{RGB}{255, 243, 225}
+\definecolor{orangedark}{RGB}{180, 90, 0}
+
+% ─── Header / Footer ─────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Linear Algebra}}
+\fancyhead[R]{\small\textit{Change of Basis}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ─── Section Formatting ───────────────────────────────────────────────────────
+\titleformat{\section}{\large\bfseries\color{axiomblue}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{defgreen}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{notegray}}{\thesubsubsection}{1em}{}
+
+% ─── Theorem Environments ─────────────────────────────────────────────────────
+\tcbset{
+	defstyle/.style={
+		enhanced, colback=shadegreen, colframe=defgreen,
+		fonttitle=\bfseries, breakable
+	},
+	thmstyle/.style={
+		enhanced, colback=shadered, colframe=thmred,
+		fonttitle=\bfseries, breakable
+	},
+	axiomstyle/.style={
+		enhanced, colback=shadeblue, colframe=axiomblue,
+		fonttitle=\bfseries, breakable
+	},
+	notestyle/.style={
+		enhanced, colback=shadeyellow, colframe=orange!70!black,
+		fonttitle=\bfseries, breakable
+	},
+	propstyle/.style={
+		enhanced, colback=purpleshade, colframe=purpledark,
+		fonttitle=\bfseries, breakable
+	},
+	corstyle/.style={
+		enhanced, colback=orangeshade, colframe=orangedark,
+		fonttitle=\bfseries, breakable
+	}
+}
+
+\newtcbtheorem[number within=section]{definition}{Definition}{defstyle}{def}
+\newtcbtheorem[number within=section]{theorem}{Theorem}{thmstyle}{thm}
+\newtcbtheorem[number within=section]{corollary}{Corollary}{corstyle}{cor}
+\newtcbtheorem[number within=section]{proposition}{Proposition}{propstyle}{prop}
+\newtcbtheorem[number within=section]{remark}{Remark}{notestyle}{rem}
+\newtcbtheorem[number within=section]{example}{Example}{notestyle}{ex}
+
+% ─── Math Commands ────────────────────────────────────────────────────────────
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vv}[1]{\mathbf{#1}}
+\newcommand{\vzero}{\mathbf{0}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\nullity}{nullity}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+	
+	% ══════════════════════════════════════════════════════════════════════════════
+	\section{Introduction}
+	
+	Changing bases is a fundamental technique in linear algebra that allows us to simplify problems by representing vectors in more convenient coordinate systems. A change of basis corresponds to switching from one ordered basis of a vector space to another, and it is implemented using matrix multiplication.
+	
+	In $\R^2$, for example, instead of using the standard basis $\{\vv{e}_1, \vv{e}_2\}$, we may use a different basis that better suits the geometry or physics of a problem, such as a tangent–normal frame.
+	
+	% ══════════════════════════════════════════════════════════════════════════════
+	\section{Coordinates in $\R^2$}
+	
+	\begin{definition}{Standard Coordinates}{stdcoords}
+		Any vector $\vv{x} \in \R^2$ can be written as
+		\[
+		\vv{x} = x_1 \vv{e}_1 + x_2 \vv{e}_2,
+		\]
+		where $(x_1, x_2)^T$ are called the coordinates of $\vv{x}$ with respect to the standard basis $\{\vv{e}_1, \vv{e}_2\}$.
+	\end{definition}
+	
+	\begin{definition}{Coordinates with respect to a basis}{coordsbasis}
+		Let $\{\vv{y}, \vv{z}\}$ be a basis for $\R^2$. Then every vector $\vv{x} \in \R^2$ can be written uniquely as
+		\[
+		\vv{x} = \alpha \vv{y} + \beta \vv{z}.
+		\]
+		The vector $(\alpha, \beta)^T$ is called the coordinate vector of $\vv{x}$ with respect to the ordered basis $[\vv{y}, \vv{z}]$.
+	\end{definition}
+	
+	\begin{remark}{Ordering of a basis}{ordering}
+		The order of basis vectors matters. If the ordered basis is changed from $[\vv{y}, \vv{z}]$ to $[\vv{z}, \vv{y}]$, then the coordinate vector changes from $(\alpha, \beta)^T$ to $(\beta, \alpha)^T$.
+	\end{remark}
+	
+	% ══════════════════════════════════════════════════════════════════════════════
+	\section{Transition Matrices in $\R^2$}
+	
+	\subsection{Constructing a transition matrix}
+	
+	Suppose we are given a new basis
+	\[
+	\vv{u}_1 = \begin{pmatrix}3 \\ 2\end{pmatrix}, \quad
+	\vv{u}_2 = \begin{pmatrix}1 \\ 1\end{pmatrix}.
+	\]
+	
+	We form the matrix
+	\[
+	U = \begin{pmatrix}
+		3 & 1 \\
+		2 & 1
+	\end{pmatrix}.
+	\]
+	
+	\begin{definition}{Transition Matrix}{transmatrix}
+		Let $U = (\vv{u}_1 \ \vv{u}_2)$ be the matrix whose columns are basis vectors expressed in the standard basis. Then:
+		\[
+		\vv{x} = U\vv{c}
+		\]
+		maps coordinates $\vv{c}$ in the $\{\vv{u}_1,\vv{u}_2\}$-basis to standard coordinates.
+	\end{definition}
+	
+	\subsection{Changing from new basis to standard basis}
+	
+	If
+	\[
+	\vv{c} =
+	\begin{pmatrix}
+		c_1 \\
+		c_2
+	\end{pmatrix},
+	\quad \text{then} \quad
+	\vv{x} = c_1 \vv{u}_1 + c_2 \vv{u}_2.
+	\]
+	
+	Expanding:
+	\[
+	\vv{x} =
+	\begin{pmatrix}
+		3c_1 + c_2 \\
+		2c_1 + c_2
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		3 & 1 \\
+		2 & 1
+	\end{pmatrix}
+	\begin{pmatrix}
+		c_1 \\
+		c_2
+	\end{pmatrix}.
+	\]
+	
+	\subsection{Inverse transformation}
+	
+	To recover coordinates in the $\{\vv{u}_1,\vv{u}_2\}$ basis from standard coordinates:
+	\[
+	\vv{c} = U^{-1}\vv{x}.
+	\]
+	
+	\begin{definition}{Inverse Transition Matrix}{invtrans}
+		If $U$ is a transition matrix from a basis $B$ to the standard basis, then $U^{-1}$ is the transition matrix from the standard basis back to $B$.
+	\end{definition}
+	
+	% ══════════════════════════════════════════════════════════════════════════════
+	\section{General Change of Basis in Vector Spaces}
+	
+	\subsection{Coordinate vectors}
+	
+	\begin{definition}{Coordinate vector in a general vector space}{coordgen}
+		Let $V$ be a vector space with ordered basis
+		\[
+		E = \{\vv{v}_1, \vv{v}_2, \dots, \vv{v}_n\}.
+		\]
+		Then every vector $\vv{v} \in V$ can be written uniquely as
+		\[
+		\vv{v} = c_1 \vv{v}_1 + c_2 \vv{v}_2 + \cdots + c_n \vv{v}_n.
+		\]
+		The vector
+		\[
+		[\vv{v}]_E = (c_1, c_2, \dots, c_n)^T
+		\]
+		is called the coordinate vector of $\vv{v}$ with respect to $E$.
+	\end{definition}
+	
+	\begin{remark}{Interpretation}{interp}
+		The coordinate vector $[\vv{v}]_E$ represents $\vv{v}$ in $\R^n$, even if $\vv{v}$ itself belongs to an abstract vector space $V$. This allows abstract vector problems to be converted into matrix problems.
+	\end{remark}
+	
+	% ══════════════════════════════════════════════════════════════════════════════
+	\section{Summary}
+	
+	\begin{tcolorbox}[colback=shadeyellow, colframe=orange!70!black, title=Summary, breakable]
+		\begin{itemize}
+			\item A change of basis converts vectors from one coordinate system to another.
+			\item Coordinates depend on the ordering of the basis.
+			\item Transition matrices map coordinates between bases.
+			\item If $U$ is a transition matrix, then $U^{-1}$ reverses the change of basis.
+			\item Every finite-dimensional vector space admits coordinate representations via ordered bases.
+		\end{itemize}
+	\end{tcolorbox}
+	
+\end{document}
