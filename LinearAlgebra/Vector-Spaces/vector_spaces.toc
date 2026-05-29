@@ -1,0 +1,15 @@
+\contentsline {section}{\numberline {1}Introduction to Vector Spaces}{2}{section.1}%
+\contentsline {section}{\numberline {2}Euclidean Vector Spaces}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Space $\mathbb {R}^n$}{2}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Geometric Interpretation in $\mathbb {R}^2$ and $\mathbb {R}^3$}{3}{subsubsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.2}The Space $\mathbb {R}^{m\times n}$}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}The Vector Space Axioms}{4}{section.3}%
+\contentsline {section}{\numberline {4}Examples of Vector Spaces}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The Function Space $C[a,b]$}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The Polynomial Space $P_n$}{6}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Verification of Axioms: Detailed Walkthrough}{7}{section.5}%
+\contentsline {section}{\numberline {6}Fundamental Properties of Vector Spaces}{8}{section.6}%
+\contentsline {section}{\numberline {7}Comparison of Vector Space Instances}{9}{section.7}%
+\contentsline {section}{\numberline {8}Illustrative Summary Diagram}{9}{section.8}%
+\contentsline {section}{\numberline {9}Further Consequences of the Axioms}{10}{section.9}%
+\contentsline {section}{\numberline {10}Summary}{11}{section.10}%

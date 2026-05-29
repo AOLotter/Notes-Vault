@@ -1,0 +1,538 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{setspace}
+
+% Set headheight for fancyhdr
+\setlength{\headheight}{14pt}
+
+% TikZ Libraries
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,decorations.pathreplacing,backgrounds,fit,matrix}
+
+% Geometry and Headers
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small Linear Algebra: Row Operations}
+\lhead{\small Lecture Notes}
+\cfoot{\thepage}
+
+% Custom Math Macros
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vv}[1]{\mathbf{#1}}
+\newcommand{\vzero}{\mathbf{0}}
+\newcommand{\Span}{\text{Span}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\nullity}{\text{nullity}}
+\newcommand{\rref}{\text{rref}}
+\newcommand{\adj}{\text{adj}}
+
+% TColorBox Styles
+\tcbset{
+	defstyle/.style={
+		colback=Blue!5,
+		colframe=Blue!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	thmstyle/.style={
+		colback=Cyan!5,
+		colframe=Cyan!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	exstyle/.style={
+		colback=Yellow!10,
+		colframe=Orange!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	remstyle/.style={
+		colback=Red!5,
+		colframe=Red!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	}
+}
+
+% Environment Definitions
+\newtcolorbox{definition}[1]{defstyle={Definition: #1}}
+\newtcolorbox{theorem}[1]{thmstyle={Theorem: #1}}
+\newtcolorbox{example}[1]{exstyle={Example: #1}}
+\newtcolorbox{remark}[1]{remstyle={Remark: #1}}
+\newtcolorbox{proposition}[1]{thmstyle={Proposition: #1}}
+\newtcolorbox{corollary}[1]{thmstyle={Corollary: #1}}
+
+% Title Formatting
+\titleformat{\section}{\Large\bfseries\color{Blue!75!black}}{}{0em}{}[\vspace{0.2cm}\hrule\vspace{0.2cm}]
+\titleformat{\subsection}{\large\bfseries\color{Cyan!75!black}}{}{0em}{}
+
+% Line Spacing
+\onehalfspacing
+
+% Title Page
+\title{\textbf{Linear Algebra: Matrix Operations and Row Reduction}}
+\author{Lecture Notes}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Introduction to Matrix Operations}
+	
+	Matrices are fundamental objects in linear algebra. A matrix is a rectangular array of numbers arranged in rows and columns.
+	
+	\begin{definition}{Matrix}
+		An $m \times n$ matrix is a rectangular array of $mn$ numbers arranged in $m$ rows and $n$ columns:
+		\[
+		A = \begin{pmatrix}
+			a_{11} & a_{12} & \cdots & a_{1n} \\
+			a_{21} & a_{22} & \cdots & a_{2n} \\
+			\vdots & \vdots & \ddots & \vdots \\
+			a_{m1} & a_{m2} & \cdots & a_{mn}
+		\end{pmatrix}
+		\]
+		where $a_{ij} \in \R$ is the entry in row $i$ and column $j$. We denote this matrix as $A \in \R^{m \times n}$.
+	\end{definition}
+	
+	\subsection{Matrix Addition and Scalar Multiplication}
+	
+	\begin{definition}{Matrix Addition}
+		Let $A, B \in \R^{m \times n}$. The sum $A + B$ is the $m \times n$ matrix whose $(i,j)$-entry is $a_{ij} + b_{ij}$.
+	\end{definition}
+	
+	\begin{definition}{Scalar Multiplication}
+		Let $A \in \R^{m \times n}$ and $c \in \R$. The scalar multiple $cA$ is the $m \times n$ matrix whose $(i,j)$-entry is $ca_{ij}$.
+	\end{definition}
+	
+	\begin{proposition}{Properties of Matrix Operations}
+		For matrices $A, B, C \in \R^{m \times n}$ and scalars $c, d \in \R$:
+		\begin{enumerate}[label=(\roman*)]
+			\item $A + B = B + A$ (commutativity)
+			\item $(A + B) + C = A + (B + C)$ (associativity)
+			\item $c(A + B) = cA + cB$ (distributivity)
+			\item $(c + d)A = cA + dA$ (distributivity)
+			\item $c(dA) = (cd)A$ (associativity of scalars)
+		\end{enumerate}
+	\end{proposition}
+	
+	\subsection{Matrix Multiplication}
+	
+	\begin{definition}{Matrix Multiplication}
+		Let $A \in \R^{m \times n}$ and $B \in \R^{n \times p}$. The product $AB$ is the $m \times p$ matrix whose $(i,j)$-entry is:
+		\[
+		(AB)_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}
+		\]
+	\end{definition}
+	
+	\begin{remark}{Matrix Multiplication is Not Commutative}
+		In general, $AB \neq BA$. In fact, $AB$ may be defined while $BA$ is not, or both may be defined but produce different results.
+	\end{remark}
+	
+	\begin{example}{Simple Matrix Multiplication}
+		Let $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$ and $B = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}$.
+		
+		Then:
+		\[
+		AB = \begin{pmatrix} 1 \cdot 5 + 2 \cdot 7 & 1 \cdot 6 + 2 \cdot 8 \\ 3 \cdot 5 + 4 \cdot 7 & 3 \cdot 6 + 4 \cdot 8 \end{pmatrix} = \begin{pmatrix} 19 & 22 \\ 43 & 50 \end{pmatrix}
+		\]
+	\end{example}
+	
+	\section{Elementary Row Operations}
+	
+	Elementary row operations are the foundation of row reduction algorithms. These operations preserve the solution set of the system of linear equations represented by the matrix.
+	
+	\begin{definition}{Elementary Row Operations}
+		The three elementary row operations on a matrix are:
+		\begin{enumerate}[label=(\roman*)]
+			\item \textbf{Row Scaling (Type I):} Multiply a row by a nonzero scalar $c \in \R$, $c \neq 0$. Notation: $R_i \to cR_i$.
+			\item \textbf{Row Addition (Type II):} Add a multiple of one row to another row. Notation: $R_i \to R_i + cR_j$ where $i \neq j$ and $c \in \R$.
+			\item \textbf{Row Swap (Type III):} Interchange two rows. Notation: $R_i \leftrightarrow R_j$ where $i \neq j$.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{theorem}{Elementary Row Operations Preserve Solution Sets}
+		If a matrix $B$ is obtained from matrix $A$ by a sequence of elementary row operations, then the systems of linear equations represented by $A$ and $B$ have the same solution set.
+	\end{theorem}
+	
+	\begin{example}{Elementary Row Operations}
+		Consider the augmented matrix:
+		\[
+		\begin{pmatrix} 2 & 4 & | & 6 \\ 1 & 3 & | & 5 \end{pmatrix}
+		\]
+		
+		Applying $R_1 \leftrightarrow R_2$:
+		\[
+		\begin{pmatrix} 1 & 3 & | & 5 \\ 2 & 4 & | & 6 \end{pmatrix}
+		\]
+		
+		Applying $R_2 \to R_2 - 2R_1$:
+		\[
+		\begin{pmatrix} 1 & 3 & | & 5 \\ 0 & -2 & | & -4 \end{pmatrix}
+		\]
+	\end{example}
+	
+	\section{Row Reduction and Row Echelon Form}
+	
+	\begin{definition}{Row Echelon Form (REF)}
+		A matrix is in row echelon form if it satisfies:
+		\begin{enumerate}[label=(\roman*)]
+			\item All zero rows (rows with all entries equal to zero) appear at the bottom of the matrix.
+			\item The first nonzero entry (called the pivot) in each nonzero row is to the right of the pivot in the row above it.
+			\item All entries below a pivot are zero.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{definition}{Reduced Row Echelon Form (RREF)}
+		A matrix is in reduced row echelon form if it is in row echelon form and additionally satisfies:
+		\begin{enumerate}[label=(\roman*), resume]
+			\item Each pivot is equal to 1.
+			\item All entries above and below each pivot are zero.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{remark}{Uniqueness of RREF}
+		Every matrix has a unique reduced row echelon form. In contrast, the row echelon form of a matrix is not unique.
+	\end{remark}
+	
+	\begin{example}{Row Echelon Form vs. RREF}
+		The matrix
+		\[
+		\begin{pmatrix} 1 & 2 & 3 \\ 0 & 4 & 5 \\ 0 & 0 & 6 \end{pmatrix}
+		\]
+		is in row echelon form but not in reduced row echelon form.
+		
+		The matrix
+		\[
+		\begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
+		\]
+		is in reduced row echelon form.
+	\end{example}
+	
+	\section{Gaussian Elimination}
+	
+	Gaussian elimination is an algorithm for transforming a matrix into row echelon form using elementary row operations.
+	
+	\begin{definition}{Gaussian Elimination Algorithm}
+		Given an $m \times n$ matrix $A$, Gaussian elimination proceeds as follows:
+		\begin{enumerate}
+			\item Identify the leftmost nonzero column. This is the first pivot column.
+			\item If the top entry in the pivot column is zero, swap rows to place a nonzero entry at the top.
+			\item Use row addition operations to make all entries below the pivot equal to zero.
+			\item Repeat the process for the remaining submatrix (ignoring the current row and all rows above it), moving to the right.
+			\item Continue until the matrix is in row echelon form.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{example}{Gaussian Elimination}
+		Consider the augmented matrix:
+		\[
+		\left(\begin{array}{ccc|c}
+			2 & 1 & -1 & 8 \\
+			-3 & -1 & 2 & -11 \\
+			-2 & 1 & 2 & -3
+		\end{array}\right)
+		\]
+		
+		\textbf{Step 1:} Use $R_1$ as the pivot row. Eliminate below:
+		\begin{align*}
+			R_2 &\to R_2 + \tfrac{3}{2}R_1 \\
+			R_3 &\to R_3 + R_1
+		\end{align*}
+		\[
+		\left(\begin{array}{ccc|c}
+			2 & 1 & -1 & 8 \\
+			0 & 1/2 & 1/2 & 1 \\
+			0 & 2 & 1 & 5
+		\end{array}\right)
+		\]
+		
+		\textbf{Step 2:} Use $R_2$ as the pivot row. Eliminate below:
+		\begin{align*}
+			R_3 &\to R_3 - 4R_2
+		\end{align*}
+		\[
+		\left(\begin{array}{ccc|c}
+			2 & 1 & -1 & 8 \\
+			0 & 1/2 & 1/2 & 1 \\
+			0 & 0 & -1 & 1
+		\end{array}\right)
+		\]
+		
+		This matrix is now in row echelon form.
+	\end{example}
+	
+	\begin{proposition}{Rank of a Matrix}
+		The rank of a matrix $A$, denoted $\rank(A)$, is the number of nonzero rows in any row echelon form of $A$. Equivalently, it is the number of pivot columns.
+	\end{proposition}
+	
+	\subsection{Forward Elimination}
+	
+	Forward elimination is the process of transforming a matrix into row echelon form. The algorithm works systematically from the top-left corner, moving right and down.
+	
+	\begin{theorem}{Forward Elimination Termination}
+		Every matrix can be reduced to row echelon form by Gaussian elimination in a finite number of steps.
+	\end{theorem}
+	
+	\section{Gauss-Jordan Elimination}
+	
+	Gauss-Jordan elimination is an extension of Gaussian elimination that transforms a matrix into reduced row echelon form.
+	
+	\begin{definition}{Gauss-Jordan Elimination Algorithm}
+		Gauss-Jordan elimination extends Gaussian elimination by:
+		\begin{enumerate}
+			\item First, apply Gaussian elimination to obtain row echelon form.
+			\item Then, perform back substitution using row operations to create zeros \textbf{above} each pivot as well.
+			\item Scale each pivot row so that the pivot equals 1.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{example}{Gauss-Jordan Elimination}
+		Continuing from the previous example, we have:
+		\[
+		\left(\begin{array}{ccc|c}
+			2 & 1 & -1 & 8 \\
+			0 & 1/2 & 1/2 & 1 \\
+			0 & 0 & -1 & 1
+		\end{array}\right)
+		\]
+		
+		\textbf{Step 1:} Scale rows to have pivots equal to 1:
+		\begin{align*}
+			R_1 &\to \tfrac{1}{2}R_1 \\
+			R_2 &\to 2R_2 \\
+			R_3 &\to -R_3
+		\end{align*}
+		\[
+		\left(\begin{array}{ccc|c}
+			1 & 1/2 & -1/2 & 4 \\
+			0 & 1 & 1 & 2 \\
+			0 & 0 & 1 & -1
+		\end{array}\right)
+		\]
+		
+		\textbf{Step 2:} Eliminate above the pivots, working from bottom-right to top-left:
+		\begin{align*}
+			R_2 &\to R_2 - R_3 \\
+			R_1 &\to R_1 + \tfrac{1}{2}R_3
+		\end{align*}
+		\[
+		\left(\begin{array}{ccc|c}
+			1 & 1/2 & 0 & 7/2 \\
+			0 & 1 & 0 & 3 \\
+			0 & 0 & 1 & -1
+		\end{array}\right)
+		\]
+		
+		\textbf{Step 3:} Eliminate above remaining pivots:
+		\begin{align*}
+			R_1 &\to R_1 - \tfrac{1}{2}R_2
+		\end{align*}
+		\[
+		\left(\begin{array}{ccc|c}
+			1 & 0 & 0 & 2 \\
+			0 & 1 & 0 & 3 \\
+			0 & 0 & 1 & -1
+		\end{array}\right)
+		\]
+		
+		This matrix is now in reduced row echelon form. The solution to the system is $(x, y, z) = (2, 3, -1)$.
+	\end{example}
+	
+	\subsection{Back Substitution}
+	
+	Back substitution is the process of solving for the variables starting from the last equation and working backwards.
+	
+	\begin{definition}{Back Substitution}
+		Once a system is in row echelon form (or reduced row echelon form), back substitution involves:
+		\begin{enumerate}
+			\item Identifying free variables (columns without pivots).
+			\item Solving for the leading variables in terms of the free variables, starting from the bottom equation.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{example}{Back Substitution with Free Variables}
+		Consider the system in RREF:
+		\[
+		\left(\begin{array}{ccccc|c}
+			1 & 0 & 2 & 0 & 3 & 5 \\
+			0 & 1 & -1 & 0 & 4 & 2 \\
+			0 & 0 & 0 & 1 & -2 & 3 \\
+			0 & 0 & 0 & 0 & 0 & 0
+		\end{array}\right)
+		\]
+		
+		The pivot columns are 1, 2, and 4. The free variables are $x_3$ and $x_5$.
+		
+		From the RREF form:
+		\begin{align*}
+			x_1 &= 5 - 2x_3 - 3x_5 \\
+			x_2 &= 2 + x_3 - 4x_5 \\
+			x_4 &= 3 + 2x_5
+		\end{align*}
+		
+		Setting $x_3 = s$ and $x_5 = t$ (parameters), the general solution is:
+		\[
+		\begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \end{pmatrix} = \begin{pmatrix} 5 \\ 2 \\ 0 \\ 3 \\ 0 \end{pmatrix} + s\begin{pmatrix} -2 \\ 1 \\ 1 \\ 0 \\ 0 \end{pmatrix} + t\begin{pmatrix} -3 \\ -4 \\ 0 \\ 2 \\ 1 \end{pmatrix}
+		\]
+	\end{example}
+	
+	\section{Applications and Special Cases}
+	
+	\subsection{Solving Linear Systems}
+	
+	\begin{theorem}{Solution Structure}
+		For a system $A\vv{x} = \vv{b}$:
+		\begin{enumerate}[label=(\roman*)]
+			\item If $\rank(A) < \rank([A|\vv{b}])$, the system is inconsistent (no solution).
+			\item If $\rank(A) = \rank([A|\vv{b}]) = n$ (number of columns), the system has a unique solution.
+			\item If $\rank(A) = \rank([A|\vv{b}]) < n$, the system has infinitely many solutions.
+		\end{enumerate}
+	\end{theorem}
+	
+	\subsection{Finding the Inverse of a Matrix}
+	
+	\begin{definition}{Matrix Inverse}
+		An $n \times n$ matrix $A$ is invertible if there exists an $n \times n$ matrix $A^{-1}$ such that:
+		\[
+		AA^{-1} = A^{-1}A = I_n
+		\]
+		where $I_n$ is the $n \times n$ identity matrix.
+	\end{definition}
+	
+	\begin{theorem}{Gauss-Jordan Method for Finding Inverses}
+		To find $A^{-1}$ for an invertible $n \times n$ matrix $A$:
+		\begin{enumerate}
+			\item Form the augmented matrix $[A|I_n]$.
+			\item Apply Gauss-Jordan elimination to transform this into $[I_n|A^{-1}]$.
+			\item The right half of the resulting matrix is $A^{-1}$.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{example}{Finding a Matrix Inverse}
+		Let $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$. We form:
+		\[
+		\left[\begin{array}{cc|cc}
+			1 & 2 & 1 & 0 \\
+			3 & 4 & 0 & 1
+		\end{array}\right]
+		\]
+		
+		Apply $R_2 \to R_2 - 3R_1$:
+		\[
+		\left[\begin{array}{cc|cc}
+			1 & 2 & 1 & 0 \\
+			0 & -2 & -3 & 1
+		\end{array}\right]
+		\]
+		
+		Apply $R_2 \to -\frac{1}{2}R_2$:
+		\[
+		\left[\begin{array}{cc|cc}
+			1 & 2 & 1 & 0 \\
+			0 & 1 & 3/2 & -1/2
+		\end{array}\right]
+		\]
+		
+		Apply $R_1 \to R_1 - 2R_2$:
+		\[
+		\left[\begin{array}{cc|cc}
+			1 & 0 & -2 & 1 \\
+			0 & 1 & 3/2 & -1/2
+		\end{array}\right]
+		\]
+		
+		Therefore, $A^{-1} = \begin{pmatrix} -2 & 1 \\ 3/2 & -1/2 \end{pmatrix}$.
+	\end{example}
+	
+	\subsection{Determining Linear Dependence}
+	
+	\begin{definition}{Linear Independence and Dependence}
+		A set of vectors $\{\vv{v}_1, \vv{v}_2, \ldots, \vv{v}_k\}$ is linearly independent if the only solution to:
+		\[
+		c_1\vv{v}_1 + c_2\vv{v}_2 + \cdots + c_k\vv{v}_k = \vzero
+		\]
+		is $c_1 = c_2 = \cdots = c_k = 0$. Otherwise, the set is linearly dependent.
+	\end{definition}
+	
+	\begin{proposition}{Testing Linear Independence via Row Reduction}
+		Arrange the vectors as columns of a matrix and perform row reduction. The vectors are linearly independent if and only if each column is a pivot column in the row echelon form.
+	\end{proposition}
+	
+	\begin{corollary}{Rank and Nullity}
+		For an $m \times n$ matrix $A$:
+		\[
+		\rank(A) + \nullity(A) = n
+		\]
+		where $\nullity(A)$ is the dimension of the null space (kernel) of $A$.
+	\end{corollary}
+	
+	\newpage
+	
+	\section{Summary and Key Takeaways}
+	
+	Row reduction is the cornerstone of computational linear algebra. Through elementary row operations, we can:
+	
+	\begin{enumerate}
+		\item Solve systems of linear equations.
+		\item Determine if a system is consistent or inconsistent.
+		\item Find the rank of a matrix and identify pivot and free variables.
+		\item Compute matrix inverses.
+		\item Test linear independence of vectors.
+		\item Find bases for fundamental subspaces.
+	\end{enumerate}
+	
+	\textbf{Key Algorithms:}
+	\begin{itemize}
+		\item \textbf{Gaussian Elimination:} Transforms a matrix into row echelon form (REF).
+		\item \textbf{Gauss-Jordan Elimination:} Transforms a matrix into reduced row echelon form (RREF).
+		\item \textbf{Back Substitution:} Extracts the solution from row echelon form.
+	\end{itemize}
+	
+	The reduced row echelon form is unique for each matrix and provides complete information about the solution set of the corresponding linear system.
+	
+\end{document}

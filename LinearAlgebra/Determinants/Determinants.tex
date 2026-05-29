@@ -1,535 +1,685 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath, amssymb}
-\usepackage[a4paper,margin=2.5cm]{geometry}
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{setspace}
+
+\setlength{\headheight}{14pt}
+
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,decorations.pathreplacing,backgrounds,fit,matrix}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small Determinants of Matrices}
+\lhead{\small Lecture Notes}
+\cfoot{\thepage}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\vv}[1]{\mathbf{#1}}
+\newcommand{\vzero}{\mathbf{0}}
+\newcommand{\Span}{\text{Span}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\nullity}{\text{nullity}}
+\newcommand{\im}{\text{im}}
+\newcommand{\Det}{\text{det}}
+
+\tcbset{
+	defstyle/.style={
+		colback=Blue!5,
+		colframe=Blue!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	thmstyle/.style={
+		colback=Cyan!5,
+		colframe=Cyan!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	exstyle/.style={
+		colback=Yellow!10,
+		colframe=Orange!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	remstyle/.style={
+		colback=Red!5,
+		colframe=Red!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	propstyle/.style={
+		colback=Green!5,
+		colframe=Green!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	corstyle/.style={
+		colback=Magenta!5,
+		colframe=Magenta!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	}
+}
+
+\newtcolorbox{definition}[1]{defstyle={Definition: #1}}
+\newtcolorbox{theorem}[1]{thmstyle={Theorem: #1}}
+\newtcolorbox{example}[1]{exstyle={Example: #1}}
+\newtcolorbox{remark}[1]{remstyle={Remark: #1}}
+\newtcolorbox{proposition}[1]{propstyle={Proposition: #1}}
+\newtcolorbox{corollary}[1]{corstyle={Corollary: #1}}
+\newtcolorbox{proofbox}{
+	colback=White,
+	colframe=Black!50,
+	arc=0mm,
+	boxrule=0.8pt,
+	left=5pt,
+	right=5pt,
+	top=5pt,
+	bottom=5pt,
+	fonttitle=\bfseries,
+	title={Proof}
+}
+
+\titleformat{\section}{\Large\bfseries\color{Blue!75!black}}{}{0em}{}[\vspace{0.2cm}\hrule\vspace{0.2cm}]
+\titleformat{\subsection}{\large\bfseries\color{Cyan!75!black}}{}{0em}{}
+
+\onehalfspacing
+
+\title{\textbf{Determinants of Matrices}}
+\author{Lecture Notes}
+\date{\today}
 
 \begin{document}
 	
-	\title{Study Notes: Determinants}
-	\author{Antony Lotter}
-	\date{\today}
 	\maketitle
 	
-	\section*{Determinant of a $2\times 2$ matrix}
-	
-	Consider
-	\[
-	A = \begin{bmatrix}
-		a & b \\
-		c & d
-	\end{bmatrix}.
-	\]
-	
-	The determinant of $A$ is
-	\[
-	\det(A) = \begin{vmatrix}
-		a & b \\
-		c & d
-	\end{vmatrix}
-	= ad - bc.
-	\]
-	
-	\bigskip
-	
-	\section*{Determinant of a $3\times 3$ matrix}
-	
-	Let
-	\[
-	A = \begin{bmatrix}
-		a_{11} & a_{12} & a_{13} \\
-		a_{21} & a_{22} & a_{23} \\
-		a_{31} & a_{32} & a_{33}
-	\end{bmatrix}.
-	\]
-	
-	A cofactor expansion along the first row gives
-	\[
-	\det(A) =
-	a_{11}
-	\begin{vmatrix}
-		a_{22} & a_{23} \\
-		a_{32} & a_{33}
-	\end{vmatrix}
-	-
-	a_{12}
-	\begin{vmatrix}
-		a_{21} & a_{23} \\
-		a_{31} & a_{33}
-	\end{vmatrix}
-	+
-	a_{13}
-	\begin{vmatrix}
-		a_{21} & a_{22} \\
-		a_{31} & a_{32}
-	\end{vmatrix}.
-	\]
-	
-	Using the $2\times 2$ formula inside, this becomes
-	\[
-	\det(A) =
-	a_{11}(a_{22}a_{33} - a_{23}a_{32})
-	-
-	a_{12}(a_{21}a_{33} - a_{23}a_{31})
-	+
-	a_{13}(a_{21}a_{32} - a_{22}a_{31}).
-	\]
-	
-	Equivalently (Sarrus' rule):
-	\[
-	\det(A) =
-	a_{11}a_{22}a_{33}
-	+
-	a_{12}a_{23}a_{31}
-	+
-	a_{13}a_{21}a_{32}
-	-
-	a_{13}a_{22}a_{31}
-	-
-	a_{11}a_{23}a_{32}
-	-
-	a_{12}a_{21}a_{33}.
-	\]
-	
-	\bigskip
-	
-	\section*{Determinant of a $4\times 4$ matrix}
-	
-	Let
-	\[
-	A =
-	\begin{bmatrix}
-		a_{11} & a_{12} & a_{13} & a_{14} \\
-		a_{21} & a_{22} & a_{23} & a_{24} \\
-		a_{31} & a_{32} & a_{33} & a_{34} \\
-		a_{41} & a_{42} & a_{43} & a_{44}
-	\end{bmatrix}.
-	\]
-	
-	The cofactor $C_{1j}$ of the entry $a_{1j}$ is
-	\[
-	C_{1j} = (-1)^{1+j} M_{1j},
-	\]
-	where $M_{1j}$ is the determinant of the $3\times 3$ minor obtained by deleting row 1 and column $j$.
-	
-	A cofactor expansion along the first row is
-	\[
-	\det(A) =
-	a_{11} C_{11}
-	+
-	a_{12} C_{12}
-	+
-	a_{13} C_{13}
-	+
-	a_{14} C_{14}.
-	\]
-	
-	Explicitly,
-	\[
-	\det(A) =
-	a_{11}
-	\begin{vmatrix}
-		a_{22} & a_{23} & a_{24} \\
-		a_{32} & a_{33} & a_{34} \\
-		a_{42} & a_{43} & a_{44}
-	\end{vmatrix}
-	-
-	a_{12}
-	\begin{vmatrix}
-		a_{21} & a_{23} & a_{24} \\
-		a_{31} & a_{33} & a_{34} \\
-		a_{41} & a_{43} & a_{44}
-	\end{vmatrix}
-	+
-	a_{13}
-	\begin{vmatrix}
-		a_{21} & a_{22} & a_{24} \\
-		a_{31} & a_{32} & a_{34} \\
-		a_{41} & a_{42} & a_{44}
-	\end{vmatrix}
-	-
-	a_{14}
-	\begin{vmatrix}
-		a_{21} & a_{22} & a_{23} \\
-		a_{31} & a_{32} & a_{33} \\
-		a_{41} & a_{42} & a_{43}
-	\end{vmatrix}.
-	\]
-	
-	Each $3\times 3$ determinant can be expanded using the $3\times 3$ formulas above.
-	
-	\bigskip
+	\tableofcontents
 	
 	\newpage
 	
-	\section*{Useful properties}
+	\section{Introduction}
 	
-	For any $n\times n$ matrix $A$:
+	The determinant is one of the most important scalar quantities associated with a square matrix. It encodes valuable information about the matrix and the linear transformation it represents. The determinant appears in numerous applications across mathematics, physics, and engineering, from computing areas and volumes to solving systems of linear equations, finding eigenvalues, and analyzing the invertibility of matrices.
+	
+	In this chapter, we will:
 	\begin{itemize}
-		\item $\det(A) = 0$ if and only if $A$ is singular (not invertible).
-		\item Swapping two rows multiplies the determinant by $-1$.
-		\item Multiplying a row by a scalar $k$ multiplies the determinant by $k$.
-		\item Adding a multiple of one row to another row does not change the determinant.
-		\item $\det(AB) = \det(A)\det(B)$ for any $n\times n$ matrices $A,B$.
-		\item $\det(A^{T}) = \det(A)$.
+		\item Define the determinant rigorously using cofactors and minors
+		\item Develop efficient methods for computing determinants
+		\item Explore the key properties and applications of determinants
+		\item Work through detailed examples for various matrix sizes
+		\item Understand why determinants are fundamental to linear algebra
 	\end{itemize}
 	
-	\section*{\underline{Examples}$\downarrow$}
+	\section{Definition and Basic Concepts}
 	
-	\subsection*{Example 1: $2\times 2$ determinant}
+	\subsection{Minors and Cofactors}
 	
-	Compute the determinant of
-	\[
-	A =
-	\begin{bmatrix}
-		2 & -3 \\
-		4 & 1
-	\end{bmatrix}.
-	\]
+	\begin{definition}{Minor}
+		Let $A$ be an $n \times n$ matrix. The \textbf{$(i,j)$-minor} of $A$, denoted $M_{ij}$, is the determinant of the $(n-1) \times (n-1)$ submatrix obtained by deleting the $i$-th row and $j$-th column of $A$.
+	\end{definition}
 	
-	Using the formula $\det(A) = ad - bc$, we have
-	\[
-	\det(A) = (2)(1) - (-3)(4)
-	\]
-	\[
-	\det(A) = 2 - (-12)
-	\]
-	\[
-	\det(A) = 2 + 12 = 14.
-	\]
+	\begin{definition}{Cofactor}
+		The \textbf{$(i,j)$-cofactor} of $A$, denoted $C_{ij}$, is defined as
+		\[
+		C_{ij} = (-1)^{i+j} M_{ij}
+		\]
+		The factor $(-1)^{i+j}$ is called the \textbf{sign factor} or \textbf{checkerboard pattern}.
+	\end{definition}
 	
-	\subsection*{Example 2: $3\times 3$ determinant (cofactor expansion)}
+	\begin{remark}{Checkerboard Pattern}
+		The sign factor $(-1)^{i+j}$ creates a checkerboard pattern of signs:
+		\[
+		\begin{pmatrix}
+			+ & - & + & - & \cdots \\
+			- & + & - & + & \cdots \\
+			+ & - & + & - & \cdots \\
+			- & + & - & + & \cdots \\
+			\vdots & \vdots & \vdots & \vdots & \ddots
+		\end{pmatrix}
+		\]
+		This pattern ensures that cofactors are correctly signed for the cofactor expansion formula.
+	\end{remark}
 	
-	Compute the determinant of
-	\[
-	B =
-	\begin{bmatrix}
-		1 & 2 & 3 \\
-		0 & -1 & 4 \\
-		2 & 1 & 0
-	\end{bmatrix}.
-	\]
+	\subsection{The Determinant Definition}
 	
-	Expand along the first row:
-	\[
-	\det(B) =
-	1
-	\begin{vmatrix}
-		-1 & 4 \\
-		1 & 0
-	\end{vmatrix}
-	-
-	2
-	\begin{vmatrix}
-		0 & 4 \\
-		2 & 0
-	\end{vmatrix}
-	+
-	3
-	\begin{vmatrix}
-		0 & -1 \\
-		2 & 1
-	\end{vmatrix}.
-	\]
+	\begin{definition}{Determinant via Cofactor Expansion}
+		Let $A$ be an $n \times n$ matrix. The \textbf{determinant of $A$}, denoted $\Det(A)$ or $|A|$, is defined as
+		\[
+		\Det(A) = \sum_{j=1}^{n} a_{1j} C_{1j} = \sum_{j=1}^{n} a_{1j} (-1)^{1+j} M_{1j}
+		\]
+		where $a_{1j}$ is the $(1,j)$ entry of $A$, and the sum is over the first row. This is called \textbf{cofactor expansion along the first row}.
+		
+		More generally, we can expand along any row $i$ or any column $j$:
+		\begin{align*}
+			\Det(A) &= \sum_{j=1}^{n} a_{ij} C_{ij} \quad \text{(expansion along row } i \text{)} \\
+			\Det(A) &= \sum_{i=1}^{n} a_{ij} C_{ij} \quad \text{(expansion along column } j \text{)}
+		\end{align*}
+	\end{definition}
 	
-	Now evaluate each $2\times 2$ determinant:
-	\[
-	\begin{vmatrix}
-		-1 & 4 \\
-		1 & 0
-	\end{vmatrix}
-	= (-1)(0) - (4)(1) = -4,
-	\]
-	\[
-	\begin{vmatrix}
-		0 & 4 \\
-		2 & 0
-	\end{vmatrix}
-	= (0)(0) - (4)(2) = -8,
-	\]
-	\[
-	\begin{vmatrix}
-		0 & -1 \\
-		2 & 1
-	\end{vmatrix}
-	= (0)(1) - (-1)(2) = 2.
-	\]
-	
-	Substitute back:
-	\[
-	\det(B) = 1(-4) - 2(-8) + 3(2)
-	\]
-	\[
-	\det(B) = -4 + 16 + 6
-	\]
-	\[
-	\det(B) = 18.
-	\]
-	
-	\subsection*{Example 3: $3\times 3$ determinant (Sarrus' rule)}
-	
-	Compute the determinant of
-	\[
-	C =
-	\begin{bmatrix}
-		2 & 0 & 1 \\
-		-1 & 3 & 2 \\
-		4 & -2 & 1
-	\end{bmatrix}.
-	\]
-	
-	Using Sarrus' rule, write the first two columns again:
-	\[
-	\begin{array}{ccc|cc}
-		2 & 0 & 1 & 2 & 0 \\
-		-1 & 3 & 2 & -1 & 3 \\
-		4 & -2 & 1 & 4 & -2
-	\end{array}
-	\]
-	
-	Sum of downward diagonals:
-	\[
-	(2)(3)(1) + (0)(2)(4) + (1)(-1)(-2) = 6 + 0 + 2 = 8.
-	\]
-	
-	Sum of upward diagonals:
-	\[
-	(1)(3)(4) + (2)(2)(2) + (0)(-1)(1) = 12 + 8 + 0 = 20.
-	\]
-	
-	Therefore,
-	\[
-	\det(C) = 8 - 20 = -12.
-	\]
-	
-	\subsection*{Example 4: $4\times 4$ determinant with zeros}
-	
-	Compute the determinant of
-	\[
-	D =
-	\begin{bmatrix}
-		1 & 0 & 2 & -1 \\
-		3 & 1 & 0 & 2 \\
-		0 & -2 & 1 & 0 \\
-		2 & 0 & 1 & 1
-	\end{bmatrix}.
-	\]
-	
-	Expand along the first row (because it has a zero):
-	\[
-	\det(D) =
-	1 \cdot C_{11}
-	+
-	0 \cdot C_{12}
-	+
-	2 \cdot C_{13}
-	+
-	(-1) \cdot C_{14}.
-	\]
-	
-	So
-	\[
-	\det(D) = 1 \cdot
-	\begin{vmatrix}
-		1 & 0 & 2 \\
-		-2 & 1 & 0 \\
-		0 & 1 & 1
-	\end{vmatrix}
-	+
-	2 \cdot
-	\begin{vmatrix}
-		3 & 1 & 2 \\
-		0 & -2 & 0 \\
-		2 & 0 & 1
-	\end{vmatrix}
-	-
-	1 \cdot
-	\begin{vmatrix}
-		3 & 1 & 0 \\
-		0 & -2 & 1 \\
-		2 & 0 & 1
-	\end{vmatrix}.
-	\]
-	
-	Call these three $3\times 3$ determinants $D_1$, $D_2$, and $D_3$.
+	\begin{remark}{Independence of Expansion}
+		A fundamental property of the determinant is that the value is independent of which row or column we choose for expansion. All choices yield the same result. This allows us to choose the row or column with the most zeros to simplify computation.
+	\end{remark}
 	
 	\newpage
 	
-	\paragraph{Compute $D_1$:}
-	\[
-	D_1 =
-	\begin{vmatrix}
-		1 & 0 & 2 \\
-		-2 & 1 & 0 \\
-		0 & 1 & 1
-	\end{vmatrix}.
-	\]
+	\section{Computing Determinants: 2 by 2 Matrices}
 	
-	Expand along the first row:
-	\[
-	D_1 =
-	1
-	\begin{vmatrix}
-		1 & 0 \\
-		1 & 1
-	\end{vmatrix}
-	-
-	0
-	\begin{vmatrix}
-		-2 & 0 \\
-		0 & 1
-	\end{vmatrix}
-	+
-	2
-	\begin{vmatrix}
-		-2 & 1 \\
-		0 & 1
-	\end{vmatrix}.
-	\]
+	For $2 \times 2$ matrices, the determinant formula is simple and can be memorized.
 	
-	Compute the $2\times 2$ determinants:
-	\[
-	\begin{vmatrix}
-		1 & 0 \\
-		1 & 1
-	\end{vmatrix}
-	= (1)(1) - (0)(1) = 1,
-	\]
-	\[
-	\begin{vmatrix}
-		-2 & 1 \\
-		0 & 1
-	\end{vmatrix}
-	= (-2)(1) - (1)(0) = -2.
-	\]
+	\begin{proposition}{2 by 2 Determinant Formula}
+		For a $2 \times 2$ matrix $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$,
+		\[
+		\Det(A) = ad - bc
+		\]
+	\end{proposition}
 	
-	Thus
-	\[
-	D_1 = 1(1) + 2(-2) = 1 - 4 = -3.
-	\]
+	\begin{proofbox}
+		
+		Using cofactor expansion along the first row:
+		\begin{align*}
+			\Det(A) &= a \cdot C_{11} + b \cdot C_{12} \\
+			&= a \cdot (-1)^{1+1} M_{11} + b \cdot (-1)^{1+2} M_{12} \\
+			&= a \cdot d + b \cdot (-c) \\
+			&= ad - bc
+		\end{align*}
+		
+	\end{proofbox}
 	
-	\newpage
+	\begin{example}{Determinant of a 2 by 2 Matrix}
+		Find the determinant of $A = \begin{pmatrix} 3 & 2 \\ 5 & 4 \end{pmatrix}$.
+		
+		Using the formula:
+		\[
+		\Det(A) = (3)(4) - (2)(5) = 12 - 10 = 2
+		\]
+	\end{example}
 	
-	\paragraph{Compute $D_2$:}
-	\[
-	D_2 =
-	\begin{vmatrix}
-		3 & 1 & 2 \\
-		0 & -2 & 0 \\
-		2 & 0 & 1
-	\end{vmatrix}.
-	\]
+	\begin{example}{2 by 2 Matrix with Zero Determinant}
+		Find the determinant of $B = \begin{pmatrix} 2 & 4 \\ 3 & 6 \end{pmatrix}$.
+		
+		Notice that the second row is $\frac{3}{2}$ times the first row (the rows are linearly dependent).
+		
+		\[
+		\Det(B) = (2)(6) - (4)(3) = 12 - 12 = 0
+		\]
+		
+		The determinant is zero, confirming that the matrix is singular (not invertible).
+	\end{example}
 	
-	Expand along the second row (it has a zero):
-	\[
-	D_2 =
-	0 \cdot
-	\begin{vmatrix}
-		1 & 2 \\
-		0 & 1
-	\end{vmatrix}
-	-
-	(-2) \cdot
-	\begin{vmatrix}
-		3 & 2 \\
-		2 & 1
-	\end{vmatrix}
-	+
-	0 \cdot
-	\begin{vmatrix}
-		3 & 1 \\
-		2 & 0
-	\end{vmatrix}.
-	\]
+	\begin{example}{2 by 2 Rotation Matrix}
+		Find the determinant of the rotation matrix $R = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$.
+		
+		\[
+		\Det(R) = (\cos\theta)(\cos\theta) - (-\sin\theta)(\sin\theta) = \cos^2\theta + \sin^2\theta = 1
+		\]
+		
+		This shows that rotation matrices have determinant 1, which is expected since they represent rotations that preserve area and orientation.
+	\end{example}
 	
-	Only the middle term remains:
-	\[
-	D_2 = 2
-	\begin{vmatrix}
-		3 & 2 \\
-		2 & 1
-	\end{vmatrix}.
-	\]
+	\section{Computing Determinants: 3 by 3 Matrices}
 	
-	Compute the $2\times 2$ determinant:
-	\[
-	\begin{vmatrix}
-		3 & 2 \\
-		2 & 1
-	\end{vmatrix}
-	= (3)(1) - (2)(2) = 3 - 4 = -1.
-	\]
+	For $3 \times 3$ matrices, we can use either cofactor expansion or the Rule of Sarrus.
 	
-	So
-	\[
-	D_2 = 2(-1) = -2.
-	\]
+	\subsection{Rule of Sarrus}
 	
-	\paragraph{Compute $D_3$:}
-	\[
-	D_3 =
-	\begin{vmatrix}
-		3 & 1 & 0 \\
-		0 & -2 & 1 \\
-		2 & 0 & 1
-	\end{vmatrix}.
-	\]
+	\begin{definition}{Rule of Sarrus}
+		For a $3 \times 3$ matrix $A = \begin{pmatrix} a & b & c \\ d & e & f \\ g & h & i \end{pmatrix}$, the determinant can be computed as
+		\[
+		\Det(A) = aei + bfg + cdh - ceg - afh - bdi
+		\]
+		
+		Alternatively, this can be visualized by:
+		\begin{enumerate}
+			\item Writing the matrix and repeating the first two columns on the right
+			\item Computing the product of the three diagonals going down-right (add these products)
+			\item Computing the product of the three diagonals going down-left (subtract these products)
+		\end{enumerate}
+	\end{definition}
 	
-	Expand along the first row (because of the zero):
-	\[
-	D_3 =
-	3
-	\begin{vmatrix}
-		-2 & 1 \\
-		0 & 1
-	\end{vmatrix}
-	-
-	1
-	\begin{vmatrix}
-		0 & 1 \\
-		2 & 1
-	\end{vmatrix}
-	+
-	0 \cdot
-	\begin{vmatrix}
-		0 & -2 \\
-		2 & 0
-	\end{vmatrix}.
-	\]
+	\begin{example}{3 by 3 Determinant Using Rule of Sarrus}
+		Find the determinant of $A = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 4 & 5 \\ 1 & 0 & 6 \end{pmatrix}$.
+		
+		Using the Rule of Sarrus:
+		\[
+		\begin{array}{ccccc}
+			1 & 2 & 3 & 1 & 2 \\
+			0 & 4 & 5 & 0 & 4 \\
+			1 & 0 & 6 & 1 & 0
+		\end{array}
+		\]
+		
+		Down-right diagonals: $(1)(4)(6) + (2)(5)(1) + (3)(0)(0) = 24 + 10 + 0 = 34$
+		
+		Down-left diagonals: $(3)(4)(1) + (1)(5)(0) + (2)(0)(6) = 12 + 0 + 0 = 12$
+		
+		Therefore:
+		\[
+		\Det(A) = 34 - 12 = 22
+		\]
+	\end{example}
 	
-	Compute the $2\times 2$ determinants:
-	\[
-	\begin{vmatrix}
-		-2 & 1 \\
-		0 & 1
-	\end{vmatrix}
-	= (-2)(1) - (1)(0) = -2,
-	\]
-	\[
-	\begin{vmatrix}
-		0 & 1 \\
-		2 & 1
-	\end{vmatrix}
-	= (0)(1) - (1)(2) = -2.
-	\]
+	\subsection{Cofactor Expansion for 3 by 3 Matrices}
 	
-	Thus
-	\[
-	D_3 = 3(-2) - 1(-2) = -6 + 2 = -4.
-	\]
+	\begin{example}{3 by 3 Determinant Using Cofactor Expansion}
+		Find the determinant of $B = \begin{pmatrix} 2 & 1 & 3 \\ 0 & 4 & 5 \\ 0 & 1 & 2 \end{pmatrix}$ using cofactor expansion.
+		
+		Since the first column has two zeros, expanding along the first column is most efficient:
+		\begin{align*}
+			\Det(B) &= 2 \cdot C_{11} + 0 \cdot C_{21} + 0 \cdot C_{31} \\
+			&= 2 \cdot (-1)^{1+1} M_{11} \\
+			&= 2 \cdot \begin{vmatrix} 4 & 5 \\ 1 & 2 \end{vmatrix} \\
+			&= 2 \cdot (4 \cdot 2 - 5 \cdot 1) \\
+			&= 2 \cdot (8 - 5) \\
+			&= 2 \cdot 3 \\
+			&= 6
+		\end{align*}
+	\end{example}
 	
-	\paragraph{Combine to get $\det(D)$:}
-	\[
-	\det(D) = 1\cdot D_1 + 2\cdot D_2 - 1\cdot D_3
-	\]
-	\[
-	\det(D) = (-3) + 2(-2) - (-4)
-	\]
-	\[
-	\det(D) = -3 - 4 + 4 = -3.
-	\]
+	\begin{example}{3 by 3 Matrix with All Nonzero Entries}
+		Find the determinant of $C = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{pmatrix}$.
+		
+		Notice that the rows are linearly dependent (row 3 = row 2 + (row 2 -- row 1), approximately).
+		
+		Using cofactor expansion along the first row:
+		\begin{align*}
+			\Det(C) &= 1 \cdot \begin{vmatrix} 5 & 6 \\ 8 & 9 \end{vmatrix} - 2 \cdot \begin{vmatrix} 4 & 6 \\ 7 & 9 \end{vmatrix} + 3 \cdot \begin{vmatrix} 4 & 5 \\ 7 & 8 \end{vmatrix} \\
+			&= 1(45 - 48) - 2(36 - 42) + 3(32 - 35) \\
+			&= 1(-3) - 2(-6) + 3(-3) \\
+			&= -3 + 12 - 9 \\
+			&= 0
+		\end{align*}
+		
+		As expected, the determinant is zero because the rows are linearly dependent.
+		
+		\
+		
+	\end{example}
 	
-	So
-	\[
-	\det(D) = -3.
-	\]
+	\section{Computing Determinants: n by n Matrices}
+	
+	\subsection{General Cofactor Expansion Method}
+	
+	For an $n \times n$ matrix, cofactor expansion works for any $n$, but it becomes computationally expensive for large $n$ due to the recursive nature of the calculation.
+	
+	\begin{example}{4 by 4 Determinant Using Cofactor Expansion}
+		Find the determinant of 
+		\[
+		A = \begin{pmatrix} 
+			1 & 0 & 2 & 0 \\
+			3 & 1 & 1 & 2 \\
+			0 & 4 & 1 & 3 \\
+			2 & 0 & 1 & 0
+		\end{pmatrix}
+		\]
+		
+		Expanding along the first row (which has two zeros):
+		\begin{align*}
+			\Det(A) &= 1 \cdot C_{11} + 0 \cdot C_{12} + 2 \cdot C_{13} + 0 \cdot C_{14} \\
+			&= 1 \cdot (-1)^{1+1} M_{11} + 2 \cdot (-1)^{1+3} M_{13}
+		\end{align*}
+		
+		For $M_{11}$, delete row 1 and column 1:
+		\[
+		M_{11} = \begin{vmatrix} 
+			1 & 1 & 2 \\
+			4 & 1 & 3 \\
+			0 & 1 & 0
+		\end{vmatrix}
+		\]
+		
+		Expanding along the third row:
+		\[
+		M_{11} = 0 - 1 \cdot (-1)^{3+2} \begin{vmatrix} 1 & 2 \\ 4 & 3 \end{vmatrix} + 0 = -1(-1)(3 - 8) = -1(-1)(-5) = -5
+		\]
+		
+		For $M_{13}$, delete row 1 and column 3:
+		\[
+		M_{13} = \begin{vmatrix} 
+			3 & 1 & 2 \\
+			0 & 4 & 3 \\
+			2 & 0 & 0
+		\end{vmatrix}
+		\]
+		
+		Expanding along the third row:
+		\[
+		M_{13} = 2 \cdot (-1)^{3+1} \begin{vmatrix} 1 & 2 \\ 4 & 3 \end{vmatrix} = 2(3 - 8) = 2(-5) = -10
+		\]
+		
+		Therefore:
+		\[
+		\Det(A) = 1 \cdot 1 \cdot (-5) + 2 \cdot 1 \cdot (-10) = -5 - 20 = -25
+		\]
+	\end{example}
+	
+	\subsection{Row Reduction Method}
+	
+	An efficient method for computing determinants of large matrices is to use row reduction, keeping track of how row operations affect the determinant.
+	
+	\begin{proposition}{Effect of Row Operations on Determinant}
+		When applying elementary row operations to a matrix $A$:
+		\begin{enumerate}[label=(\roman*)]
+			\item If row $i$ is multiplied by a scalar $c$, then $\Det(A_{\text{new}}) = c \cdot \Det(A)$
+			\item If two rows are swapped, then $\Det(A_{\text{new}}) = -\Det(A)$
+			\item If a multiple of one row is added to another row, then $\Det(A_{\text{new}}) = \Det(A)$ (determinant is unchanged)
+		\end{enumerate}
+	\end{proposition}
+	
+	\begin{example}{Computing Determinant via Row Reduction}
+		Find the determinant of 
+		\[
+		A = \begin{pmatrix}
+			2 & 1 & 3 \\
+			4 & 2 & 6 \\
+			1 & 0 & 2
+		\end{pmatrix}
+		\]
+		
+		\textbf{Step 1:} Swap rows 1 and 3 (determinant changes sign)
+		\[
+		\begin{pmatrix}
+			1 & 0 & 2 \\
+			4 & 2 & 6 \\
+			2 & 1 & 3
+		\end{pmatrix}, \quad \Det = -\Det(A)
+		\]
+		
+		\textbf{Step 2:} $R_2 \to R_2 - 4R_1$ and $R_3 \to R_3 - 2R_1$ (determinant unchanged)
+		\[
+		\begin{pmatrix}
+			1 & 0 & 2 \\
+			0 & 2 & -2 \\
+			0 & 1 & -1
+		\end{pmatrix}, \quad \Det = -\Det(A)
+		\]
+		
+		\textbf{Step 3:} Swap rows 2 and 3 (determinant changes sign)
+		\[
+		\begin{pmatrix}
+			1 & 0 & 2 \\
+			0 & 1 & -1 \\
+			0 & 2 & -2
+		\end{pmatrix}, \quad \Det = \Det(A)
+		\]
+		
+		\textbf{Step 4:} $R_3 \to R_3 - 2R_2$ (determinant unchanged)
+		\[
+		\begin{pmatrix}
+			1 & 0 & 2 \\
+			0 & 1 & -1 \\
+			0 & 0 & 0
+		\end{pmatrix}, \quad \Det = \Det(A)
+		\]
+		
+		The upper triangular matrix has a zero on the diagonal, so its determinant is 0. Therefore, $\Det(A) = 0$.
+	\end{example}
+	
+	\subsection{Determinant of Upper Triangular Matrices}
+	
+	\begin{proposition}{Determinant of Triangular Matrices}
+		For an upper triangular matrix $A = \begin{pmatrix} 
+			a_{11} & a_{12} & \cdots & a_{1n} \\
+			0 & a_{22} & \cdots & a_{2n} \\
+			\vdots & \vdots & \ddots & \vdots \\
+			0 & 0 & \cdots & a_{nn}
+		\end{pmatrix}$,
+		\[
+		\Det(A) = a_{11} \cdot a_{22} \cdot a_{33} \cdots a_{nn}
+		\]
+		That is, the determinant is the product of the diagonal entries.
+	\end{proposition}
+	
+	\begin{example}{Determinant of an Upper Triangular Matrix}
+		Find the determinant of 
+		\[
+		U = \begin{pmatrix}
+			3 & 2 & 4 & 1 \\
+			0 & -1 & 5 & 2 \\
+			0 & 0 & 2 & 3 \\
+			0 & 0 & 0 & 4
+		\end{pmatrix}
+		\]
+		
+		Since $U$ is upper triangular:
+		\[
+		\Det(U) = 3 \cdot (-1) \cdot 2 \cdot 4 = -24
+		\]
+	\end{example}
+	
+	\section{Properties of Determinants}
+	
+	\begin{theorem}{Fundamental Properties of Determinants}
+		Let $A$ and $B$ be $n \times n$ matrices. Then:
+		\begin{enumerate}[label=(\roman*)]
+			\item $\Det(AB) = \Det(A) \cdot \Det(B)$ (multiplicative property)
+			\item $\Det(A^T) = \Det(A)$ (transposition preserves determinant)
+			\item If $A$ has a row or column of zeros, then $\Det(A) = 0$
+			\item If $A$ has two identical rows or columns, then $\Det(A) = 0$
+			\item If $A$ has two proportional rows or columns, then $\Det(A) = 0$
+			\item $\Det(cA) = c^n \Det(A)$ for any scalar $c$ (scaling all entries)
+			\item If $A$ is invertible, then $\Det(A^{-1}) = \frac{1}{\Det(A)}$
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{example}{Product Rule for Determinants}
+		Let $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$ and $B = \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix}$.
+		
+		We can verify the product rule:
+		\begin{align*}
+			\Det(A) &= 1(4) - 2(3) = 4 - 6 = -2 \\
+			\Det(B) &= 2(3) - 0(1) = 6 \\
+			\Det(A) \cdot \Det(B) &= (-2)(6) = -12
+		\end{align*}
+		
+		Computing $AB$:
+		\[
+		AB = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix} = \begin{pmatrix} 4 & 6 \\ 10 & 12 \end{pmatrix}
+		\]
+		
+		\[
+		\Det(AB) = 4(12) - 6(10) = 48 - 60 = -12 \quad \checkmark
+		\]
+	\end{example}
+	
+	\begin{example}{Invertibility Test}
+		Determine which matrices are invertible:
+		
+		(a) $A = \begin{pmatrix} 2 & 4 \\ 1 & 2 \end{pmatrix}$: $\Det(A) = 2(2) - 4(1) = 0$. Not invertible.
+		
+		(b) $B = \begin{pmatrix} 2 & 4 \\ 1 & 3 \end{pmatrix}$: $\Det(B) = 2(3) - 4(1) = 6 - 4 = 2 \neq 0$. Invertible.
+		
+		If $B$ is invertible, then $\Det(B^{-1}) = \frac{1}{\Det(B)} = \frac{1}{2}$.
+	\end{example}
+	
+	\section{Applications and Importance of Determinants}
+	
+	\subsection{Invertibility of Matrices}
+	
+	\begin{theorem}{Invertibility Criterion}
+		An $n \times n$ matrix $A$ is invertible if and only if $\Det(A) \neq 0$.
+	\end{theorem}
+	
+	\begin{remark}{Relationship to Rank}
+		For an $n \times n$ matrix $A$:
+		\begin{itemize}
+			\item If $\Det(A) \neq 0$, then $\rank(A) = n$ (full rank)
+			\item If $\Det(A) = 0$, then $\rank(A) < n$ (deficient rank)
+			\item The rows and columns are linearly independent if and only if $\Det(A) \neq 0$
+		\end{itemize}
+	\end{remark}
+	
+	\subsection{Geometric Interpretation}
+	
+	\begin{definition}{Geometric Meaning of Determinant}
+		For an $n \times n$ matrix $A$ whose column vectors are $\vv{a}_1, \vv{a}_2, \ldots, \vv{a}_n \in \R^n$:
+		\begin{itemize}
+			\item In $\R^2$: $|\Det(A)|$ is the area of the parallelogram formed by the two column vectors
+			\item In $\R^3$: $|\Det(A)|$ is the volume of the parallelepiped formed by the three column vectors
+			\item In $\R^n$: $|\Det(A)|$ is the $n$-dimensional volume of the parallelepiped formed by the column vectors
+			\item The sign of $\Det(A)$ indicates orientation: positive means the transformation preserves orientation, negative means it reverses orientation
+		\end{itemize}
+	\end{definition}
+	
+	\begin{example}{Area of a Parallelogram}
+		Find the area of the parallelogram formed by vectors $\vv{u} = \begin{pmatrix} 3 \\ 1 \end{pmatrix}$ and $\vv{v} = \begin{pmatrix} 1 \\ 4 \end{pmatrix}$.
+		
+		The area is:
+		\[
+		\text{Area} = \left| \begin{vmatrix} 3 & 1 \\ 1 & 4 \end{vmatrix} \right| = |3(4) - 1(1)| = |12 - 1| = 11
+		\]
+	\end{example}
+	
+	\begin{example}{Volume of a Parallelepiped}
+		Find the volume of the parallelepiped formed by vectors $\vv{u} = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$, $\vv{v} = \begin{pmatrix} 0 \\ 2 \\ 0 \end{pmatrix}$, and $\vv{w} = \begin{pmatrix} 0 \\ 0 \\ 3 \end{pmatrix}$.
+		
+		The volume is:
+		\[
+		\text{Volume} = \left| \begin{vmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 3 \end{vmatrix} \right| = |1 \cdot 2 \cdot 3| = 6
+		\]
+	\end{example}
+	
+	\subsection{Cramer's Rule}
+	
+	\begin{theorem}{Cramer's Rule}
+		Let $A$ be an $n \times n$ invertible matrix and let $\vv{b}$ be a column vector. The unique solution to the system $A\vv{x} = \vv{b}$ is
+		\[
+		x_i = \frac{\Det(A_i)}{\Det(A)}
+		\]
+		where $A_i$ is the matrix obtained by replacing the $i$-th column of $A$ with $\vv{b}$.
+	\end{theorem}
+	
+	\begin{example}{Solving a System Using Cramer's Rule}
+		Solve the system using Cramer's rule:
+		\begin{align*}
+			2x + y &= 5 \\
+			3x + 2y &= 8
+		\end{align*}
+		
+		In matrix form: $A\vv{x} = \vv{b}$ where $A = \begin{pmatrix} 2 & 1 \\ 3 & 2 \end{pmatrix}$ and $\vv{b} = \begin{pmatrix} 5 \\ 8 \end{pmatrix}$.
+		
+		First, compute $\Det(A) = 2(2) - 1(3) = 4 - 3 = 1 \neq 0$ (so unique solution exists).
+		
+		For $x$: $A_1 = \begin{pmatrix} 5 & 1 \\ 8 & 2 \end{pmatrix}$, so $\Det(A_1) = 5(2) - 1(8) = 10 - 8 = 2$
+		
+		\[
+		x = \frac{\Det(A_1)}{\Det(A)} = \frac{2}{1} = 2
+		\]
+		
+		For $y$: $A_2 = \begin{pmatrix} 2 & 5 \\ 3 & 8 \end{pmatrix}$, so $\Det(A_2) = 2(8) - 5(3) = 16 - 15 = 1$
+		
+		\[
+		y = \frac{\Det(A_2)}{\Det(A)} = \frac{1}{1} = 1
+		\]
+		
+		Therefore, $\vv{x} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$. Verification: $2(2) + 1 = 5$ \checkmark\ and $3(2) + 2(1) = 8$ \checkmark
+	\end{example}
+	
+	\subsection{Eigenvalues and the Characteristic Polynomial}
+	
+	\begin{definition}{Characteristic Polynomial}
+		The \textbf{characteristic polynomial} of an $n \times n$ matrix $A$ is defined as
+		\[
+		p(\lambda) = \Det(A - \lambda I)
+		\]
+		where $I$ is the $n \times n$ identity matrix and $\lambda$ is a variable.
+		
+		The eigenvalues of $A$ are the roots of the characteristic polynomial: $\Det(A - \lambda I) = 0$.
+	\end{definition}
+	
+	\begin{example}{Finding Eigenvalues Using the Characteristic Polynomial}
+		Find the eigenvalues of $A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}$.
+		
+		The characteristic polynomial is:
+		\[
+		p(\lambda) = \Det \begin{pmatrix} 3-\lambda & 1 \\ 0 & 2-\lambda \end{pmatrix} = (3-\lambda)(2-\lambda) - 0 = (3-\lambda)(2-\lambda)
+		\]
+		
+		Setting $p(\lambda) = 0$:
+		\[
+		(3-\lambda)(2-\lambda) = 0
+		\]
+		
+		The eigenvalues are $\lambda_1 = 3$ and $\lambda_2 = 2$.
+	\end{example}
+	
+	\section{Summary}
+	
+	Determinants are a fundamental concept in linear algebra with far-reaching applications:
+	
+	\begin{itemize}
+		\item The \textbf{definition via cofactors and minors} provides a recursive way to compute determinants for any $n \times n$ matrix
+		
+		\item For $2 \times 2$ matrices, the formula $\Det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$ is simple and memorizable
+		
+		\item For $3 \times 3$ matrices, we can use either the Rule of Sarrus or cofactor expansion
+		
+		\item For larger matrices, row reduction tracking is often the most efficient computational method
+		
+		\item The \textbf{key properties} of determinants---particularly the product rule $\Det(AB) = \Det(A)\Det(B)$ and the sign reversals under row swaps---are essential for both theory and computation
+		
+		\item A matrix is invertible if and only if $\Det(A) \neq 0$
+		
+		\item Geometrically, $|\Det(A)|$ represents the volume scaling factor of the linear transformation represented by $A$
+		
+		\item Determinants are essential for understanding eigenvalues, solving systems of equations (Cramer's rule), and numerous other applications in science and engineering
+	\end{itemize}
+	
+	The determinant truly is one of the most important scalar quantities in linear algebra, deserving careful study and practice in computation.
 	
 \end{document}

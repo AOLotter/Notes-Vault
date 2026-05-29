@@ -1,0 +1,553 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{setspace}
+
+\setlength{\headheight}{14pt}
+
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,decorations.pathreplacing,backgrounds,fit,matrix}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small Matrix Representations of Linear Transformations}
+\lhead{\small Lecture Notes}
+\cfoot{\thepage}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\vv}[1]{\mathbf{#1}}
+\newcommand{\vzero}{\mathbf{0}}
+\newcommand{\Span}{\text{Span}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\nullity}{\text{nullity}}
+\newcommand{\im}{\text{im}}
+\newcommand{\rref}{\text{rref}}
+
+\tcbset{
+	defstyle/.style={
+		colback=Blue!5,
+		colframe=Blue!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	thmstyle/.style={
+		colback=Cyan!5,
+		colframe=Cyan!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	exstyle/.style={
+		colback=Yellow!10,
+		colframe=Orange!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	remstyle/.style={
+		colback=Red!5,
+		colframe=Red!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	propstyle/.style={
+		colback=Green!5,
+		colframe=Green!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	},
+	corstyle/.style={
+		colback=Magenta!5,
+		colframe=Magenta!75!black,
+		arc=0mm,
+		boxrule=1.5pt,
+		left=5pt,
+		right=5pt,
+		top=5pt,
+		bottom=5pt,
+		fonttitle=\bfseries,
+		title={#1}
+	}
+}
+
+\newtcolorbox{definition}[1]{defstyle={Definition: #1}}
+\newtcolorbox{theorem}[1]{thmstyle={Theorem: #1}}
+\newtcolorbox{example}[1]{exstyle={Example: #1}}
+\newtcolorbox{remark}[1]{remstyle={Remark: #1}}
+\newtcolorbox{proposition}[1]{propstyle={Proposition: #1}}
+\newtcolorbox{corollary}[1]{corstyle={Corollary: #1}}
+\newtcolorbox{proofbox}{
+	colback=White,
+	colframe=Black!50,
+	arc=0mm,
+	boxrule=0.8pt,
+	left=5pt,
+	right=5pt,
+	top=5pt,
+	bottom=5pt,
+	fonttitle=\bfseries,
+	title={Proof}
+}
+
+\titleformat{\section}{\Large\bfseries\color{Blue!75!black}}{}{0em}{}[\vspace{0.2cm}\hrule\vspace{0.2cm}]
+\titleformat{\subsection}{\large\bfseries\color{Cyan!75!black}}{}{0em}{}
+
+\onehalfspacing
+
+\title{\textbf{Matrix Representations of Linear Transformations}}
+\author{Lecture Notes}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Introduction}
+	
+	In the previous chapters, we studied linear transformations as abstract mappings between vector spaces. However, to perform actual computations with linear transformations, we need to represent them using matrices. This chapter develops the theory of matrix representations of linear transformations and explores how these representations change when we switch between different bases.
+	
+	The key insight is that once we fix ordered bases for the domain and codomain, a linear transformation $L: \R^n \to \R^m$ can be completely described by an $m \times n$ matrix $A$. The entries of this matrix are determined by where the basis vectors of the domain are mapped to, expressed as linear combinations of the basis vectors of the codomain.
+	
+	In this chapter, we will study:
+	\begin{itemize}
+		\item The matrix representation theorem and how to construct the representing matrix
+		\item The relationship between matrix representations with respect to different bases
+		\item Similar matrices and their properties
+		\item Applications to homogeneous coordinates and geometric transformations
+	\end{itemize}
+	
+	\section{Matrix Representation Theorem}
+	
+	\begin{definition}{Matrix Representation}
+		Let $E = \{\vv{u}_1, \vv{u}_2, \ldots, \vv{u}_n\}$ be an ordered basis for $\R^n$, and let $F = \{\vv{b}_1, \vv{b}_2, \ldots, \vv{b}_m\}$ be an ordered basis for $\R^m$. Let $L: \R^n \to \R^m$ be a linear transformation.
+		
+		The \textbf{matrix representation of $L$ with respect to the bases $E$ and $F$} is the $m \times n$ matrix $A$ whose $j$-th column is the coordinate vector of $L(\vv{u}_j)$ with respect to the basis $F$. That is, if
+		\[
+		L(\vv{u}_j) = a_{1j}\vv{b}_1 + a_{2j}\vv{b}_2 + \cdots + a_{mj}\vv{b}_m,
+		\]
+		then the $j$-th column of $A$ is $\begin{pmatrix} a_{1j} \\ a_{2j} \\ \vdots \\ a_{mj} \end{pmatrix}$.
+	\end{definition}
+	
+	\begin{theorem}{Matrix Representation Theorem (4.2.3)}
+		Let $E = \{\vv{u}_1, \vv{u}_2, \ldots, \vv{u}_n\}$ and $F = \{\vv{b}_1, \vv{b}_2, \ldots, \vv{b}_m\}$ be ordered bases for $\R^n$ and $\R^m$, respectively. If $L: \R^n \to \R^m$ is a linear transformation and $A$ is the matrix representing $L$ with respect to $E$ and $F$, then
+		\[
+		\vv{a}_j = B^{-1} L(\vv{u}_j) \quad \text{for } j = 1, 2, \ldots, n
+		\]
+		where $B = (\vv{b}_1 \mid \vv{b}_2 \mid \cdots \mid \vv{b}_m)$ is the matrix whose columns are the basis vectors of $F$, and $\vv{a}_j$ is the $j$-th column of $A$.
+	\end{theorem}
+	
+	\begin{proofbox}
+		
+		If $A$ represents $L$ with respect to $E$ and $F$, then for $j = 1, 2, \ldots, n$:
+		\[
+		L(\vv{u}_j) = a_{1j}\vv{b}_1 + a_{2j}\vv{b}_2 + \cdots + a_{mj}\vv{b}_m = B\vv{a}_j
+		\]
+		
+		The matrix $B$ is nonsingular since its column vectors form a basis for $\R^m$. Therefore, we can multiply both sides by $B^{-1}$ to obtain:
+		\[
+		\vv{a}_j = B^{-1} L(\vv{u}_j) \quad \text{for } j = 1, 2, \ldots, n
+		\]
+		
+	\end{proofbox}
+	
+	\subsection{Computing Matrix Representations Using RREF}
+	
+	\begin{corollary}{Matrix Representation via RREF (4.2.4)}
+		If $A$ is the matrix representing the linear transformation $L: \R^n \to \R^m$ with respect to the bases $E = \{\vv{u}_1, \vv{u}_2, \ldots, \vv{u}_n\}$ and $F = \{\vv{b}_1, \vv{b}_2, \ldots, \vv{b}_m\}$, then the reduced row echelon form of the augmented matrix
+		\[
+		(\vv{b}_1 \mid \vv{b}_2 \mid \cdots \mid \vv{b}_m \mid L(\vv{u}_1) \mid L(\vv{u}_2) \mid \cdots \mid L(\vv{u}_n))
+		\]
+		is
+		\[
+		(I_m \mid \vv{a}_1 \mid \vv{a}_2 \mid \cdots \mid \vv{a}_n) = (I_m \mid A)
+		\]
+		where $I_m$ is the $m \times m$ identity matrix and $A$ is the matrix representation of $L$.
+	\end{corollary}
+	
+	\begin{proofbox}
+		
+		Let $B = (\vv{b}_1 \mid \vv{b}_2 \mid \cdots \mid \vv{b}_m)$. The matrix $(B \mid L(\vv{u}_1) \mid L(\vv{u}_2) \mid \cdots \mid L(\vv{u}_n))$ is row equivalent to
+		\begin{align*}
+			B^{-1}(B \mid L(\vv{u}_1) \mid L(\vv{u}_2) \mid \cdots \mid L(\vv{u}_n)) &= (B^{-1}B \mid B^{-1}L(\vv{u}_1) \mid \cdots \mid B^{-1}L(\vv{u}_n)) \\
+			&= (I_m \mid \vv{a}_1 \mid \vv{a}_2 \mid \cdots \mid \vv{a}_n) \\
+			&= (I_m \mid A)
+		\end{align*}
+		
+		The reduced row echelon form of the augmented matrix is obtained by performing row reduction, which gives us $(I_m \mid A)$.
+		
+	\end{proofbox}
+	
+	\begin{remark}{Practical Computation}
+		The corollary provides a practical method for computing matrix representations: form the augmented matrix with basis vectors of $F$ on the left and images of basis vectors from $E$ on the right, then reduce to RREF. The right portion of the reduced form gives the matrix representation.
+	\end{remark}
+	
+	\begin{example}{Computing a Matrix Representation in $\R^3$}
+		Let $L: \R^3 \to \R^3$ be the linear transformation defined by
+		\[
+		L(x, y, z) = (x + 2y + 3z, 2y + z, x + y + z).
+		\]
+		
+		We will find the matrix representation of $L$ with respect to the standard bases $E = F = \{\vv{e}_1, \vv{e}_2, \vv{e}_3\}$ where $\vv{e}_1 = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$, $\vv{e}_2 = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}$, $\vv{e}_3 = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}$.
+		
+		\textbf{Step 1: Compute the images of the basis vectors.}
+		\begin{align*}
+			L(\vv{e}_1) &= L(1, 0, 0) = (1, 0, 1) \\
+			L(\vv{e}_2) &= L(0, 1, 0) = (2, 2, 1) \\
+			L(\vv{e}_3) &= L(0, 0, 1) = (3, 1, 1)
+		\end{align*}
+		
+		\textbf{Step 2: Form the matrix from the images.}
+		
+		Since we are using the standard basis, the coordinate vectors are just the vectors themselves:
+		\[
+		A = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 2 & 1 \\ 1 & 1 & 1 \end{pmatrix}
+		\]
+		
+		\textbf{Verification:} Let's verify with a test vector $\vv{v} = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$.
+		
+		Direct computation: $L(1, 1, 1) = (1 + 2 + 3, 2 + 1, 1 + 1 + 1) = (6, 3, 3)$.
+		
+		Matrix computation: 
+		\[
+		A\vv{v} = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 2 & 1 \\ 1 & 1 & 1 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 + 2 + 3 \\ 0 + 2 + 1 \\ 1 + 1 + 1 \end{pmatrix} = \begin{pmatrix} 6 \\ 3 \\ 3 \end{pmatrix} \quad \checkmark
+		\]
+	\end{example}
+	
+	\begin{example}{Matrix Representation with Non-Standard Bases}
+		Let $L: \R^2 \to \R^2$ be defined by $L(x, y) = (x + 2y, 3x + 4y)$.
+		
+		Consider the bases $E = \{\vv{u}_1, \vv{u}_2\}$ and $F = \{\vv{b}_1, \vv{b}_2\}$ where
+		\[
+		\vv{u}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad \vv{u}_2 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \quad \vv{b}_1 = \begin{pmatrix} 1 \\ 2 \end{pmatrix}, \quad \vv{b}_2 = \begin{pmatrix} 1 \\ 3 \end{pmatrix}
+		\]
+		
+		\textbf{Step 1: Compute the images of the basis vectors of $E$.}
+		\begin{align*}
+			L(\vv{u}_1) &= L(1, 0) = (1, 3) \\
+			L(\vv{u}_2) &= L(1, 1) = (3, 7)
+		\end{align*}
+		
+		\textbf{Step 2: Express the images as linear combinations of vectors in $F$.}
+		
+		We need to find $a_{11}, a_{21}$ such that $L(\vv{u}_1) = a_{11}\vv{b}_1 + a_{21}\vv{b}_2$:
+		\[
+		\begin{pmatrix} 1 \\ 3 \end{pmatrix} = a_{11}\begin{pmatrix} 1 \\ 2 \end{pmatrix} + a_{21}\begin{pmatrix} 1 \\ 3 \end{pmatrix}
+		\]
+		
+		This gives us:
+		\begin{align*}
+			a_{11} + a_{21} &= 1 \\
+			2a_{11} + 3a_{21} &= 3
+		\end{align*}
+		
+		Solving: from the first equation, $a_{11} = 1 - a_{21}$. Substituting into the second:
+		\[
+		2(1 - a_{21}) + 3a_{21} = 3 \implies 2 - 2a_{21} + 3a_{21} = 3 \implies a_{21} = 1, \quad a_{11} = 0
+		\]
+		
+		Similarly, for $L(\vv{u}_2) = a_{12}\vv{b}_1 + a_{22}\vv{b}_2$:
+		\[
+		\begin{pmatrix} 3 \\ 7 \end{pmatrix} = a_{12}\begin{pmatrix} 1 \\ 2 \end{pmatrix} + a_{22}\begin{pmatrix} 1 \\ 3 \end{pmatrix}
+		\]
+		
+		This gives us:
+		\begin{align*}
+			a_{12} + a_{22} &= 3 \\
+			2a_{12} + 3a_{22} &= 7
+		\end{align*}
+		
+		Solving: $a_{12} = 3 - a_{22}$ and $2(3 - a_{22}) + 3a_{22} = 7$, so $a_{22} = 1$ and $a_{12} = 2$.
+		
+		\textbf{Step 3: Form the matrix representation.}
+		\[
+		A = \begin{pmatrix} 0 & 2 \\ 1 & 1 \end{pmatrix}
+		\]
+	\end{example}
+	
+	\section{Homogeneous Coordinates}
+	
+	\begin{definition}{Homogeneous Coordinates}
+		For a point $(x, y) \in \R^2$, the \textbf{homogeneous coordinates} are the three-dimensional vector
+		\[
+		\begin{pmatrix} x \\ y \\ 1 \end{pmatrix}
+		\]
+		More generally, for a point $\vv{x} = (x_1, x_2, \ldots, x_n) \in \R^n$, the homogeneous coordinates are
+		\[
+		\begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \\ 1 \end{pmatrix} \in \R^{n+1}
+		\]
+	\end{definition}
+	
+	\begin{remark}{Purpose of Homogeneous Coordinates}
+		Homogeneous coordinates provide a unified way to represent both translations and linear transformations (such as rotations, scaling, and reflections) as matrix multiplications. In the absence of homogeneous coordinates, translations cannot be represented as matrix multiplications of vectors in $\R^n$. By embedding the points in one higher dimension and using $(n+1) \times (n+1)$ matrices, we can represent affine transformations (translations combined with linear transformations) as simple matrix multiplications.
+	\end{remark}
+	
+	\begin{example}{2D Translation Using Homogeneous Coordinates}
+		Consider the translation that moves every point $(x, y)$ by the vector $(a, b)$:
+		\[
+		T(x, y) = (x + a, y + b)
+		\]
+		
+		In homogeneous coordinates, this translation can be represented as a matrix multiplication:
+		\[
+		\begin{pmatrix} 1 & 0 & a \\ 0 & 1 & b \\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\ y \\ 1 \end{pmatrix} = \begin{pmatrix} x + a \\ y + b \\ 1 \end{pmatrix}
+		\]
+		
+		\textbf{Example:} Translate the point $(3, 2)$ by the vector $(2, -1)$.
+		
+		Using homogeneous coordinates:
+		\[
+		\begin{pmatrix} 1 & 0 & 2 \\ 0 & 1 & -1 \\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 3 + 2 \\ 2 - 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 5 \\ 1 \\ 1 \end{pmatrix}
+		\]
+		
+		So the resulting point is $(5, 1)$.
+	\end{example}
+	
+	\begin{example}{Composition of 2D Transformations}
+		Consider a rotation by $45°$ followed by a translation by $(1, 2)$.
+		
+		The rotation matrix in homogeneous coordinates is:
+		\[
+		R = \begin{pmatrix} \cos 45° & -\sin 45° & 0 \\ \sin 45° & \cos 45° & 0 \\ 0 & 0 & 1 \end{pmatrix} = \begin{pmatrix} \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 0 \\ \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} & 0 \\ 0 & 0 & 1 \end{pmatrix}
+		\]
+		
+		The translation matrix is:
+		\[
+		T = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 2 \\ 0 & 0 & 1 \end{pmatrix}
+		\]
+		
+		The composition $T \circ R$ (translation after rotation) is:
+		\[
+		TR = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 2 \\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 0 \\ \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} & 0 \\ 0 & 0 & 1 \end{pmatrix} = \begin{pmatrix} \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 1 \\ \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} & 2 \\ 0 & 0 & 1 \end{pmatrix}
+		\]
+		
+		Now we can apply this single matrix to any point to get the result of both transformations.
+	\end{example}
+	
+	\newpage
+	
+	\section{Similarity and Change of Basis}
+	
+	\begin{theorem}{Similarity Theorem (4.3.1)}
+		Let $E = \{\vv{v}_1, \vv{v}_2, \ldots, \vv{v}_n\}$ and $F = \{\vv{w}_1, \vv{w}_2, \ldots, \vv{w}_n\}$ be two ordered bases for a vector space $V$, and let $L$ be a linear operator on $V$. Let $S$ be the transition matrix representing the change from basis $F$ to basis $E$. If $A$ is the matrix representing $L$ with respect to basis $E$, and $B$ is the matrix representing $L$ with respect to basis $F$, then
+		\[
+		B = S^{-1}AS
+		\]
+	\end{theorem}
+	
+	\begin{proofbox}
+		
+		Let $\vv{x}$ be any vector in $\R^n$ and let $\vv{v} = x_1\vv{w}_1 + x_2\vv{w}_2 + \cdots + x_n\vv{w}_n$. Define:
+		\begin{align*}
+			\vv{y} &= S\vv{x}, \quad \text{(coordinates in basis $E$)} \\
+			\vv{t} &= A\vv{y}, \quad \text{(result of applying $A$)} \\
+			\vv{z} &= B\vv{x} \quad \text{(result of applying $B$)}
+		\end{align*}
+		
+		From the definition of $S$, we have $\vv{y} = [\vv{v}]_E$ (the coordinate vector of $\vv{v}$ in basis $E$), so $\vv{v} = y_1\vv{v}_1 + \cdots + y_n\vv{v}_n$.
+		
+		Since $A$ represents $L$ with respect to $E$ and $B$ represents $L$ with respect to $F$:
+		\begin{align*}
+			\vv{t} &= [L(\vv{v})]_E \\
+			\vv{z} &= [L(\vv{v})]_F
+		\end{align*}
+		
+		The transition matrix from $E$ to $F$ is $S^{-1}$. Therefore:
+		\[
+		S^{-1}\vv{t} = \vv{z}
+		\]
+		
+		This gives us:
+		\[
+		S^{-1}A\vv{y} = S^{-1}AS\vv{x} = B\vv{x}
+		\]
+		
+		Since this holds for every $\vv{x} \in \R^n$, we have $S^{-1}AS = B$.
+		
+	\end{proofbox}
+	
+	\begin{definition}{Similar Matrices}
+		Two $n \times n$ matrices $A$ and $B$ are said to be \textbf{similar} if there exists a nonsingular matrix $S$ such that
+		\[
+		B = S^{-1}AS
+		\]
+		
+		We write $A \sim B$ to denote that $A$ and $B$ are similar.
+	\end{definition}
+	
+	\begin{remark}{Properties of Similarity}
+		\begin{enumerate}[label=(\roman*)]
+			\item If $B$ is similar to $A$, then $A$ is similar to $B$. (Symmetry)
+			\item Similarity is an equivalence relation: it is reflexive, symmetric, and transitive.
+			\item Similar matrices represent the same linear operator with respect to different bases.
+			\item Similar matrices have the same trace, determinant, characteristic polynomial, and eigenvalues.
+		\end{enumerate}
+	\end{remark}
+	
+	\begin{example}{Finding a Similar Matrix}
+		Let $A = \begin{pmatrix} 1 & 2 \\ 0 & 3 \end{pmatrix}$ represent a linear operator $L$ with respect to the standard basis $E = \{\vv{e}_1, \vv{e}_2\}$.
+		
+		Let $F = \{\vv{w}_1, \vv{w}_2\}$ be the basis where $\vv{w}_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ and $\vv{w}_2 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$.
+		
+		The transition matrix from $F$ to $E$ is
+		\[
+		S = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}
+		\]
+		
+		To find $S^{-1}$:
+		\[
+		S^{-1} = \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix}
+		\]
+		
+		The matrix $B$ representing $L$ with respect to basis $F$ is:
+		\begin{align*}
+			B &= S^{-1}AS \\
+			&= \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 1 & 2 \\ 0 & 3 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \\
+			&= \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 1 & 3 \\ 0 & 3 \end{pmatrix} \\
+			&= \begin{pmatrix} 1 & 0 \\ 0 & 3 \end{pmatrix}
+		\end{align*}
+		
+		Notice that $B$ is diagonal, which is simpler than $A$. This demonstrates how choosing an appropriate basis can simplify the matrix representation.
+	\end{example}
+	
+	\subsection{Constructing a Basis from a Similarity Transformation}
+	
+	\begin{proposition}{Constructing Bases for Similar Matrices}
+		Suppose that $A$ represents a linear operator $L$ with respect to the ordered basis $\{\vv{v}_1, \vv{v}_2, \ldots, \vv{v}_n\}$, and $B = S^{-1}AS$ for some nonsingular matrix $S$. If we define vectors $\vv{w}_1, \vv{w}_2, \ldots, \vv{w}_n$ by
+		\begin{align*}
+			\vv{w}_1 &= s_{11}\vv{v}_1 + s_{21}\vv{v}_2 + \cdots + s_{n1}\vv{v}_n \\
+			\vv{w}_2 &= s_{12}\vv{v}_1 + s_{22}\vv{v}_2 + \cdots + s_{n2}\vv{v}_n \\
+			&\vdots \\
+			\vv{w}_n &= s_{1n}\vv{v}_1 + s_{2n}\vv{v}_2 + \cdots + s_{nn}\vv{v}_n
+		\end{align*}
+		where $s_{ij}$ denotes the $(i,j)$ entry of $S$, then $\{\vv{w}_1, \vv{w}_2, \ldots, \vv{w}_n\}$ is an ordered basis for $V$, and $B$ is the matrix representing $L$ with respect to this new basis.
+	\end{proposition}
+	
+	\begin{example}{Constructing a New Basis from a Similarity Transformation}
+		Let $A = \begin{pmatrix} 4 & 2 \\ 3 & 3 \end{pmatrix}$ represent a linear operator with respect to the standard basis $E = \{\vv{e}_1, \vv{e}_2\}$.
+		
+		Suppose $S = \begin{pmatrix} 1 & 2 \\ 1 & 3 \end{pmatrix}$ and we compute
+		\[
+		B = S^{-1}AS = \begin{pmatrix} 3 & -2 \\ -1 & 1 \end{pmatrix} \begin{pmatrix} 4 & 2 \\ 3 & 3 \end{pmatrix} \begin{pmatrix} 1 & 2 \\ 1 & 3 \end{pmatrix}
+		\]
+		
+		The new basis vectors are defined by the columns of $S$:
+		\begin{align*}
+			\vv{w}_1 &= 1 \cdot \vv{e}_1 + 1 \cdot \vv{e}_2 = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \\
+			\vv{w}_2 &= 2 \cdot \vv{e}_1 + 3 \cdot \vv{e}_2 = \begin{pmatrix} 2 \\ 3 \end{pmatrix}
+		\end{align*}
+		
+		We can verify that $F = \{\vv{w}_1, \vv{w}_2\}$ is indeed a basis for $\R^2$ (since $S$ is nonsingular, its columns are linearly independent). The matrix $B$ is then the representation of the same linear operator $L$ with respect to the basis $F$.
+	\end{example}
+	
+	\subsection{Diagonalization}
+	
+	\begin{definition}{Diagonalizable Matrix}
+		An $n \times n$ matrix $A$ is said to be \textbf{diagonalizable} if it is similar to a diagonal matrix $D$. That is, there exists a nonsingular matrix $P$ such that
+		\[
+		D = P^{-1}AP
+		\]
+		where $D$ is diagonal.
+	\end{definition}
+	
+	\begin{remark}{Importance of Diagonalization}
+		Diagonalizable matrices are much easier to work with. If $D = P^{-1}AP$ where $D$ is diagonal with entries $\lambda_1, \lambda_2, \ldots, \lambda_n$, then:
+		\[
+		A = PDP^{-1}
+		\]
+		and
+		\[
+		A^k = PD^kP^{-1}
+		\]
+		Since $D^k$ is simply a diagonal matrix with entries $\lambda_1^k, \lambda_2^k, \ldots, \lambda_n^k$, computing high powers of $A$ becomes straightforward.
+	\end{remark}
+	
+	\begin{example}{Computing Powers of a Matrix Using Diagonalization}
+		Consider the matrix $A = \begin{pmatrix} 3 & 1 \\ 0 & 2 \end{pmatrix}$.
+		
+		Suppose we find that $A$ is similar to $D = \begin{pmatrix} 3 & 0 \\ 0 & 2 \end{pmatrix}$ with transition matrix $P = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$.
+		
+		Then to compute $A^{10}$:
+		\begin{align*}
+			A^{10} &= PD^{10}P^{-1} \\
+			&= \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 3^{10} & 0 \\ 0 & 2^{10} \end{pmatrix} \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix} \\
+			&= \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 3^{10} & -3^{10} \\ 0 & 2^{10} \end{pmatrix} \\
+			&= \begin{pmatrix} 3^{10} & -3^{10} + 2^{10} \\ 0 & 2^{10} \end{pmatrix}
+		\end{align*}
+		
+		This is much simpler than computing $A^{10}$ by successive multiplication.
+	\end{example}
+	
+	\newpage
+	
+	\section{Summary}
+	
+	In this chapter, we have developed the theory of matrix representations of linear transformations:
+	
+	\begin{itemize}
+		\item The \textbf{Matrix Representation Theorem} shows that every linear transformation can be represented as a matrix multiplication once we fix ordered bases for the domain and codomain.
+		
+		\item The \textbf{Corollary on RREF} provides a practical computational method: we can find the matrix representation by reducing an augmented matrix to reduced row echelon form.
+		
+		\item \textbf{Homogeneous coordinates} allow us to represent translations and other affine transformations as matrix multiplications.
+		
+		\item \textbf{Similar matrices} represent the same linear operator with respect to different bases. Two matrices $A$ and $B$ are similar if and only if there exists a nonsingular matrix $S$ such that $B = S^{-1}AS$.
+		
+		\item The relationship $B = S^{-1}AS$ shows how the matrix representation of a linear operator changes when we change bases.
+		
+		\item \textbf{Diagonalization}, which is the special case of finding a basis in which the matrix representation is diagonal, is particularly useful for theoretical understanding and practical computations.
+		
+		\item These concepts form the foundation for more advanced topics including eigenvalues, eigenvectors, and applications to systems of differential equations.
+	\end{itemize}
+	
+\end{document}
