@@ -1,0 +1,89 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\hypersetup{
+	colorlinks=true,
+	urlcolor=blue
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\titleformat{\section}
+{\large\bfseries}
+{}{0pt}{}
+[\titlerule]
+
+\newcommand{\cvitem}[2]{
+	\textbf{#1} --- #2
+}
+
+\newcommand{\cvproject}[4]{
+	\textbf{#1} \hfill #2 \\
+	\textit{#3} \\
+	#4
+}
+
+\begin{document}
+	
+	\begin{center}
+		{\LARGE \textbf{Antony L\"otter}}\\
+		Johannesburg, South Africa \,|\, +27 078 308 2570 \,|\, \href{mailto:lotterantony@gmail.com}{lotterantony@gmail.com} \,|\, 
+		\href{https://github.com/AOLotter}{GitHub} \,|\, \href{https://linkedin.com/in/yourprofile}{LinkedIn}
+	\end{center}
+	
+	\section*{Professional Summary}
+	Second-year Data Science student with strong interest in data analysis, visualization, and business problem-solving. 
+	Skilled in Python, SQL, Excel, and dashboard tools, with hands-on project experience in sales analytics, customer churn analysis, and time-series forecasting. 
+	Seeking an entry-level Data Analyst opportunity to apply analytical and communication skills in a practical business environment.
+	
+	\section*{Education}
+	\textbf{Eduvos} \hfill 2024 -- Present\\
+	BSc(IT) Data Science\\
+	Relevant coursework: Probability and Statistics, Database Management Systems, Python Programming, Data Visualization, Linear Algebra, Machine Learning Fundamentals
+	
+	\section*{Technical Skills}
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Programming:} Python, SQL
+		\subitem \textbf{\textbf{Python Libraries:} Seaborn, Scipy, pandas, 
+		\item \textbf{Tools:} Excel, Power BI, Tableau, Jupyter Notebook
+		\item \textbf{Data Skills:} Data cleaning, exploratory data analysis, visualization, reporting, dashboard design
+		\item \textbf{Other:} Git, GitHub, Microsoft Office, presentation skills
+	\end{itemize}
+	
+	\section*{Projects}
+	
+	\cvproject
+	{Sales Performance Dashboard}
+	{2026}
+	{Dashboard Project}
+	{Built an interactive sales dashboard in Power BI using a public retail dataset. Cleaned and transformed the data, created KPIs for revenue, profit, and sales volume, and designed visualizations showing monthly trends, top products, and regional performance. Identified underperforming categories and presented recommendations to improve sales.}
+	
+	\vspace{0.5em}
+	
+	\cvproject
+	{Customer Churn Analysis}
+	{2026}
+	{Business Problem Project}
+	{Analyzed customer churn data to identify the main drivers of customer loss. Used Python and SQL to clean the dataset, explored factors such as contract type, service usage, and tenure, and summarized findings in a short report. Recommended retention strategies based on the most important churn indicators.}
+	
+	\vspace{0.5em}
+	
+	\cvproject
+	{Monthly Demand Trend Analysis}
+	{2026}
+	{Time Series Project}
+	{Studied historical time-based data to identify trends, seasonality, and unusual spikes in demand. Used Python to process the data and create time-series plots, then compared moving averages and monthly patterns to support forecasting insights. Presented the results in a concise report with practical observations for planning.}
+	
+\end{document}

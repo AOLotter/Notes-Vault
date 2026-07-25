@@ -1,0 +1,345 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+
+\definecolor{statblue}{RGB}{0,90,140}
+\definecolor{statlight}{RGB}{224,241,247}
+\definecolor{statgreen}{RGB}{40,120,80}
+\definecolor{statgreenlight}{RGB}{228,245,235}
+
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{statblue}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{statblue!85!black}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{statblue!70!black}}{\thesubsubsection}{0.8em}{}
+
+
+\newtcolorbox{formulabox}[1][]{
+	colback=statlight, colframe=statblue,
+	fonttitle=\bfseries, coltitle=white, title=Key Formula,
+	boxrule=0.7pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt, #1
+}
+\newtcolorbox{notebox}[1][]{
+	colback=statgreenlight, colframe=statgreen,
+	fonttitle=\bfseries, coltitle=white, title=Note,
+	boxrule=0.7pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt, #1
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{statblue}{Basic Descriptive statistics}}
+\fancyhead[R]{\small\textcolor{statblue}{Descriptive Statistics: Topic Outline}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{colorlinks=true, linkcolor=statblue, urlcolor=statblue, citecolor=statblue}
+
+\title{\textbf{\LARGE Basic Descriptive Statistics}\\[4pt]\large Topic Outline}
+\author{Antony L\"otter}
+\date{}
+
+\begin{document}
+	
+	\maketitle
+	\thispagestyle{empty}
+	\pagestyle{empty}
+	
+	\vspace{-1.5em}
+	\noindent This document outlines some basic statistics topics from identifying types of data to exploring some techniques used to interpret the nature of a dataset or sample.
+	
+	\vspace{1em}
+	\tableofcontents
+	\newpage
+	\pagestyle{fancy}
+	
+
+	\section{Foundations: Population, Sample, and the Scope of Statistics}
+	
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Population} --- the complete, defined group relevant to a decision or study, not necessarily a literal town, state, or country population.
+		\item \textbf{Sample} --- a subset drawn from the population, used to make inferences about it.
+	\end{itemize}
+	
+	\textbf{Concept map.} Statistics is divided into two branches:
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Descriptive Statistics} --- organizing, summarizing, and presenting data. Covers: types of data, data handling, visualization, measures of central tendency, measures of dispersion, measures of position, and correlation.
+		\item \textbf{Inferential Statistics} --- drawing conclusions about a population from sample data.
+	\end{itemize}
+	
+	\section{Types of Data}
+	
+	\subsection{By Source}
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Primary data} --- collected first-hand (surveys, observation, case studies).
+		\item \textbf{Secondary data} --- already collected by someone else and reused.
+	\end{itemize}
+	
+	\subsection{By Organization}
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Raw data} --- unprocessed, as collected.
+		\item \textbf{Organized / classified data} --- arranged into a usable structure (e.g.\ a table).
+	\end{itemize}
+	
+	\subsection{By Values}
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Discrete data} --- countable, distinct values.
+		\item \textbf{Continuous data} --- can take any value within a range.
+	\end{itemize}
+	
+	\subsection{By Number of Variables}
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Univariate} --- one variable (e.g.\ the height of every student in a class).
+		\item \textbf{Bivariate} --- two variables studied together.
+		\item \textbf{Multivariate} --- more than two variables studied together.
+	\end{itemize}
+	
+	\begin{notebox}
+		The unit illustrates these ideas with two applied activities: logging one's own weekly/monthly pocket expenditure, and reading the regional-coding logic built into an Indian postal PIN code.
+	\end{notebox}
+	
+	\section{Levels of Measurement}
+	
+	Four measurement scales are covered, in increasing order of information content.
+	
+	\subsection{Nominal Scale}
+	Categorizes data by name or type only; categories are mutually exclusive and exhaustive, with no ranking implied (e.g.\ subject taught, gender, religion).
+	
+	\subsection{Ordinal Scale}
+	Categories can be ranked, but the size of the gap between ranks is not precisely measurable (e.g.\ a 5-point mood scale, or a performance rating from ``very poor'' to ``very good'').
+	
+	\subsection{Interval Scale}
+	Adds equal, meaningful intervals between values, but has no true zero --- values below zero are meaningful (e.g.\ coordinate positions on a Cartesian plane).
+	
+	\subsection{Ratio Scale}
+	Has all interval-scale properties plus a true, meaningful zero; values never fall below zero (e.g.\ height, weight, area, length, time duration).
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabularx}{\textwidth}{@{}l X X X X@{}}
+			\toprule
+			\textbf{Scale} & \textbf{Adds} & \textbf{Suitable graphs} & \textbf{Central tendency} & \textbf{Dispersion} \\
+			\midrule
+			Nominal & Naming only & Bar graph, pie chart & Mode & Binomial/multinomial variance \\
+			Ordinal & + order & Bar graph, histogram & Median & Range \\
+			Interval & + equal spacing & Histogram (area-based) & Mean & Standard deviation \\
+			Ratio & + true zero & Histogram (area-based) & Geometric/harmonic mean & Coefficient of variation \\
+			\bottomrule
+		\end{tabularx}
+		\caption*{\small Classification adapted from Afifi, May \& Clark, \textit{Practical Multivariate Analysis}, 5th ed. (2012).}
+	\end{table}
+	
+	
+	\section{Graphical Representation of Data}
+
+	
+	\subsection{Bar Graph}
+	Compares categories by bar height; suits a non-numerical (categorical) independent variable.
+	
+	\subsection{Pie Chart}
+	A circle divided into sectors (``angular circle diagram''); used to compare each component's share against the whole. Total values correspond to $360^\circ$ of arc.
+	
+	\subsection{Line Graph}
+	Connects successive data points to show how a variable changes, typically against time; multiple lines can share one set of axes for comparison.
+	
+	\subsection{Histogram}
+	Consecutive bars with no gaps, used only for \emph{continuous} class intervals --- never for a discrete variable. Bar height reflects the class frequency.
+	
+	\begin{formulabox}
+		For \textbf{unequal class intervals}, frequencies must be adjusted before plotting:
+		\[
+		\text{Adjusted frequency} = \frac{\text{Minimum class size}}{\text{Class size}} \times \text{Frequency}
+		\]
+	\end{formulabox}
+	
+	\subsection{Frequency Polygon}
+	Built by plotting class midpoints against frequency and joining them (often on top of a histogram, with one zero-frequency interval added at each end); used to visualize the overall shape of a distribution.
+	
+	\subsection{Choosing a Graph}
+	\begin{itemize}[leftmargin=*]
+		\item Bar graph --- comparison across non-numerical categories.
+		\item Pie chart --- parts of a whole at one point in time (no trend over time).
+		\item Line graph --- continuous change over time.
+		\item Histogram --- distribution across continuous class intervals.
+		\item Frequency polygon --- shape of a distribution.
+	\end{itemize}
+	
+	\subsection{Charts in Excel}
+	Highlight the data $\rightarrow$ \textbf{Insert} tab $\rightarrow$ choose the chart type.
+	
+	\section{Measures of Central Tendency}
+	
+	\subsection{Mean}
+	The arithmetic average; uses every value, so it is sensitive to outliers.
+	
+	\begin{formulabox}
+		\[
+		\bar{x} = \frac{\text{Sum of all observations}}{\text{Number of observations}} \qquad \text{Excel: \texttt{=AVERAGE(range)}}
+		\]
+		For grouped data, the mean can be found by the \emph{direct method}, the \emph{assumed mean method}, or the \emph{step-deviation method}.
+	\end{formulabox}
+	
+	\subsection{Median}
+	The middle value once data is ordered; a positional average, so it is unaffected by outliers.
+	\begin{itemize}[leftmargin=*]
+		\item Odd $n$: median $= \left(\dfrac{n+1}{2}\right)^{\text{th}}$ observation.
+		\item Even $n$: median $=$ average of the $\left(\dfrac{n}{2}\right)^{\text{th}}$ and $\left(\dfrac{n}{2}+1\right)^{\text{th}}$ observations.
+	\end{itemize}
+	Excel: \texttt{=MEDIAN(range)}
+	
+	\subsection{Mode}
+	The most frequently occurring value. A data set can be \emph{uni-modal} (one mode), \emph{bi-/multi-modal} (two or more values tied for most frequent), or have \emph{no mode} (every value equally frequent).
+	Excel: \texttt{=MODE(range)}
+	
+	\begin{notebox}
+		For a moderately skewed, uni-modal distribution: $\text{Mean} - \text{Mode} = 3(\text{Mean} - \text{Median})$.
+	\end{notebox}
+	
+	\section{Measures of Dispersion}
+	
+	Dispersion describes how spread out the data is around its central value.
+	
+	\subsection{Range}
+	The simplest measure: the gap between the largest and smallest observations.
+	
+	\subsection{Quartile Deviation}
+	\begin{formulabox}
+		\[
+		Q.D. = \frac{Q_3 - Q_1}{2}, \qquad \text{Interquartile Range (IQR)} = Q_3 - Q_1
+		\]
+	\end{formulabox}
+	The IQR is the ``middle half'' of the data and is used to flag outliers: any value more than $1.5 \times \text{IQR}$ above $Q_3$ or below $Q_1$ is an outlier.
+	Excel: $Q_1$ \texttt{=PERCENTILE(range,0.25)}, $Q_3$ \texttt{=PERCENTILE(range,0.75)}.
+	
+	\subsection{Mean Deviation}
+	\begin{formulabox}
+		\[
+		\text{M.D.}(\bar{x}) = \frac{1}{N}\sum_{i=1}^n |x_i - \bar{x}|, \qquad \text{M.D.}(\text{median}) = \frac{1}{N}\sum_{i=1}^n |x_i - M|
+		\]
+	\end{formulabox}
+	Defined for both ungrouped and grouped (discrete or continuous) data, measured either about the mean or about the median.
+	
+	\subsection{Variance}
+	\begin{formulabox}
+		\[
+		\sigma^2 = \frac{1}{N}\sum_{i=1}^n (x_i - \bar{x})^2
+		\]
+	\end{formulabox}
+	The arithmetic mean of squared deviations from the mean --- unlike range, MD, or QD, it combines every value into a single measure of spread.
+	
+	\subsection{Standard Deviation}
+	\begin{formulabox}
+		\[
+		\sigma = \sqrt{\frac{1}{N}\sum_{i=1}^n (x_i - \bar{x})^2} \qquad \text{Excel: \texttt{=STDEV(range)}}
+		\]
+	\end{formulabox}
+	Low SD $\Rightarrow$ values cluster tightly around the mean (more reliable); high SD $\Rightarrow$ values are widely spread. SD is always positive and is sensitive to outliers.
+	
+	\section{Skewness}
+	
+	Skewness measures the asymmetry of a distribution.
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Positive skew} --- longer tail on the right.
+		\item \textbf{Negative skew} --- longer tail on the left.
+		\item \textbf{Zero skew} --- symmetrical distribution.
+	\end{itemize}
+	
+	\begin{formulabox}
+		\textbf{Coefficients of skewness:}
+		\begin{align*}
+			\text{Pearson's 1st} &= \frac{\text{Mean} - \text{Mode}}{\text{S.D.}}
+			& \text{Pearson's 2nd} &= \frac{3(\text{Mean} - \text{Median})}{\text{S.D.}} \\[4pt]
+			\text{Quartile} &= \frac{Q_3+Q_1-2Q_2}{Q_3-Q_1}
+			& \text{Percentile} &= \frac{P_{90}+P_{10}-2\,\text{Median}}{P_{90}-P_{10}} \\[4pt]
+			\text{Decile} &= \frac{D_9+D_1-2\,\text{Median}}{D_9-D_1} & &
+		\end{align*}
+	\end{formulabox}
+	
+	\section{Kurtosis}
+	
+	Kurtosis describes the ``peakedness'' of the frequency curve. Excel: \texttt{=KURT(range)}.
+	\begin{itemize}[leftmargin=*]
+		\item \textbf{Leptokurtic} (positive) --- a sharp, heavy-tailed peak.
+		\item \textbf{Platykurtic} (negative) --- a blunt, light-tailed peak.
+		\item \textbf{Mesokurtic} (zero) --- a moderate peak, matching the normal distribution.
+	\end{itemize}
+	
+	\section{Measures of Position}
+	
+	\subsection{Percentile Rank}
+	The $P^{\text{th}}$ percentile is the value below which $P\%$ of observations fall. Percentiles $P_1, \dots, P_{99}$ divide the data into 100 equal groups.
+	
+	\subsection{Quartiles}
+	\begin{itemize}[leftmargin=*]
+		\item $Q_1$ --- up to 25\% of data; $Q_2$ --- 25--50\% (up to the median); $Q_3$ --- 50--75\%; $Q_4$ --- 75--100\%.
+		\item Equivalences: $25^{\text{th}}$ percentile $=Q_1$; $50^{\text{th}}$ percentile $=$ median $=Q_2$; $75^{\text{th}}$ percentile $=Q_3$.
+	\end{itemize}
+	
+	\begin{formulabox}
+		\textbf{Ungrouped (individual series):}
+		\[
+		Q_1 = \tfrac{1}{4}(n+1)^{\text{th}}\text{ value}, \qquad Q_3 = \tfrac{3}{4}(n+1)^{\text{th}}\text{ value}
+		\]
+		\textbf{Grouped data:}
+		\[
+		Q_1 = l + \left(\frac{\frac{n}{4}-cf}{f}\right)\times h, \qquad Q_3 = l + \left(\frac{\frac{3n}{4}-cf}{f}\right)\times h
+		\]
+		where $l$ = lower class boundary, $cf$ = cumulative frequency before the class, $f$ = class frequency, $h$ = class width.
+	\end{formulabox}
+	
+	\section{Correlation}
+	
+	Correlation measures the strength and direction of a linear relationship between two variables via the correlation coefficient $r$.
+	
+	\begin{itemize}[leftmargin=*]
+		\item $r = -1$: perfect negative correlation. \quad $r = 0$: no correlation. \quad $r = +1$: perfect positive correlation.
+		\item $r > 0$: positive/direct relationship. \quad $r < 0$: negative/inverse relationship.
+	\end{itemize}
+	
+	Excel: \texttt{=CORREL(range1, range2)}
+	
+	\begin{formulabox}
+		\textbf{Karl Pearson's coefficient of correlation:}
+		\[
+		\text{Direct (ungrouped): } r = \frac{\sum (x-\bar x)(y-\bar y)}{\sqrt{\sum (x-\bar x)^2 \cdot \sum (y-\bar y)^2}}
+		\]
+		\[
+		\text{Direct (grouped): } r = \frac{N\sum XY - \sum X \sum Y}{\sqrt{N\sum X^2 - (\sum X)^2}\cdot\sqrt{N\sum Y^2 - (\sum Y)^2}}
+		\]
+		\[
+		\text{Assumed mean method: } r = \frac{N\sum d_xd_y - \sum d_x \sum d_y}{\sqrt{N\sum d_x^2 - (\sum d_x)^2}\cdot\sqrt{N\sum d_y^2 - (\sum d_y)^2}}
+		\]
+	\end{formulabox}
+	
+	\section{Quick-Reference Summary}
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{@{}lll@{}}
+			\toprule
+			\textbf{Measure} & \textbf{Definition} & \textbf{Symbol} \\
+			\midrule
+			Mean & Sum of values $\div$ number of values & $\bar{x}$ \\
+			Median & Middle point of an ordered data set & $M$ \\
+			Mode & Most frequent data value & --- \\
+			\bottomrule
+		\end{tabular}
+		\caption*{\small Mean is the most commonly used measure of central location.}
+	\end{table}
+	
+	\noindent\textbf{Graph types covered:} bar graph, pie chart, line graph, histogram, frequency polygon.
+	
+	\begin{notebox}
+		\textbf{Practical tool:} Excel's \emph{Data Analysis ToolPak} (enabled via File $\to$ Options $\to$ Add-ins) provides a one-click \emph{Descriptive Statistics} report --- mean, standard deviation, and related summary statistics --- for a selected data range.
+	\end{notebox}
+	
+\end{document}
